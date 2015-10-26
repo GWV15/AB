@@ -1,0 +1,54 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = de_DE
+
+\documentclass[DIV=12,numbers=noenddot]{scrartcl}
+
+\usepackage[ngerman]{babel}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{calc}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\newcounter{blatt}
+\setcounter{blatt}{2} % Nummer des Aufgabenblattes
+\renewcommand{\thesection}{Exercise \arabic{blatt}.\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}.}
+\renewcommand{\thesubsubsection}{(\alph{subsubsection})}
+
+\title{GWV - Grundlagen der Wissensverarbeitung Blatt \arabic{blatt}}
+\author{Julian Tobergte, Melanie Budde,\\Maximilian Bauregger, Mohammad Oslani}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	\section{Search Space 1}
+	\subsection{}
+		Routenplanung im öffentlichen Nahverkehr lässt sich als state-space Suche verstehen. Ein Zustand (state) besteht aus der Postion des Agenten im Streckennetz, welches als state-space Graph vorliegt. Die Knoten beschreiben Haltestellen der Transportfahrzeuge, die Kanten definieren die Fahrtwege der Transportfahrzeuge und die Gewichtung der Kanten die Zeit, die benötigt wird, um den entsprechenden Streckenabschnitt zu befahren.
+	\subsection{}
+	\subsubsection{}
+	Folgende Zustände sind möglich, wobei X|Y beide Eimer beschreibt. Das X steht für die Menge Flüssigkeit im 4L-Eimer, das Y für den 3L-Eimer.
+	\[0|0 , 0|3 , 3|0 , 3|3 , 4|2 , 0|2 , 2|0 , 2|3 , 4|1 , 0|1 , 1|0 , 1|3 , 4|0 , 4|3\]
+    Der Startzustand heißt $0|0$ und es gibt zwei mögliche Endzustände: $2|0$ und $2|3$. Folgende Übergänge sind in jedem Zustand möglich (auch wenn nicht alle immer zu einer Veränderung führen):
+	\begin{itemize}
+		\item Fülle groß nach klein
+		\item Fülle klein nach groß
+		\item Leere groß
+		\item Leere klein
+		\item Befülle groß
+		\item Befülle klein
+	\end{itemize}
+	\subsubsection{}
+		Es lassen sich nur 2 Liter Wein abmessen, sofern zugelassen ist, dass sich diese im 3L-Eimer befinden. Dann ist es jedoch möglich:
+		\[0|0 \to 0|3 \to 3|0 \to 3|3 \to 4|2\] 
+  
+\section{Search Space 2}
+Heutige Börsengeschäfte sind derart komplex (und schnell), dass ohne die Hilfe moderner intelligenter Agenten der Börsenmarkt nicht mehr funktionieren könnte. Geldwechselkurse sind eine Problematik, für die solche Agenten eingesetzt werden. Folgendes Suchproblem ist in diesem Kontext zu bewältigen. Werden Geschäfte in diversen Ländern getätigt, so muss das Unternehmen mit verschiedenen Währungen hantieren und Geld zwischen diesen hin und her bewegen. Um hierbei keine Verluste durch das Wechseln zu machen, muss das Geld zwischen den Währungen intelligent hindurch bewegt werden. Folgender Graph (ausgedacht) beschreibt den Suchraum zu diesem Problem. Ein Knoten steht für eine Währung. Die Kanten, zwischen diesen, beschreiben die möglichen Wechselkurse von dieser Währung und die Kantengewichtung beziffert die Kosten, welche für das Wechseln entstehen. Unser Beispielunternehmen muss CAD in EUR transferieren. Der Startzustand ist somit CAD, der Endzustand EUR.
+\begin{figure}[h!]
+	\centering
+	\def\svgwidth{\columnwidth}
+	\input{waehrungen.pdf_tex}
+\end{figure}
+\end{document}

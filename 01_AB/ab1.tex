@@ -1,0 +1,48 @@
+\documentclass[10pt,a4wide]{scrartcl}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{romannum} 
+\usepackage{amsthm}
+
+\author{}
+\title{Grundlagen der Wissensverarbeitung}
+\subtitle{Tutorial 1: Application Scenarios and Terminology for Artificial Intelligence}
+\date{}
+
+\setcounter{secnumdepth}{3}
+\setcounter{section}{0}
+\renewcommand{\thesection}{Exercise \arabic{section}}
+\renewcommand{\thesubsection}{Exercise 1.\arabic{subsection} }
+\renewcommand{\thesubsubsection}{}
+
+\begin{document}
+	\maketitle
+	\setcounter{section}{1}
+	\setcounter{subsection}{1}
+	\subsection{}
+	\subsubsection{Information}
+		Information ist Wissen welches mittels eines Mediums von einem Sender an einen Empfänger übermittelt wird. Die Daten auf unserem Smartphone sind ein gutes Beispiel hierfür. Wir erhalten Nachrichten oder können unseren Standort prüfen et cetera. Meist lässt ein Sender (z.B. Google Maps bei einer Standortabfrage) uns - den Empfänger - Informationen (eine Straßenkarte unserer Umgebung) durch das Smartphone zukommen.
+		
+		\subsubsection{Implicit knowledge}
+		Implizites Wissen finden wir beim Fahrrad fahren. Die Information was getan werden muss, welche Muskelgruppen angesprochen werden, wie wir unser Gleichgewicht verlagern, wird nicht bewusst abgerufen, sondern liegen implizit schon vor. Das Wissen um die Aktion ist	zwar im motorischen Zentrum vorhanden, jedoch können wir uns auf ein Fahrrad
+		setzen und damit los fahren ohne uns vorher genau überlegen zu müssen, welche Muskelpartien bewegt werden muessen. Es reicht die Richtung und Fahrtgeschwindigkeit zu kennen. Das Wissen über die Mechanik des Fahrens liegt implizit vor. Anzumerken ist hierbei, das solches Wissen nicht klar formulierbar ist. Es gibt keine Anleitung zum Fahrrad fahren, welche man sich durchlesen kann um danach in der Lage zu sein eben dies zu tun.
+		
+		\subsubsection{Explicit knowledge}
+		Explizites Wissen ist z.B. Faktenwissen. Dieses ist abrufbar und verbal kommunizierbar. Wenn ich ein Sachbuch lese, dann bin ich hinterher in der Lage den Sachverhalt verbal wiederzugeben und auszudrücken.
+		
+		\newpage		
+		
+		\subsubsection{Fully observable \& partially observable}
+		Fully observable ist eine Umgebung, dessen Zustand für den Agenten komplett erkennbar ist wie z.B Schach oder diverse andere Brettspiele. Partially observable ist eine Umgebung, dessen Zustand dem Agenten nur zum Teil bekannt ist, wie z.B die meisten Kartenspiele. Es ist nicht bekannt, welche Aktionen die anderen Agenten (Spieler) ausführen können. Ist der Zustand nicht komplett erkennbar, müssen alle möglichen Aktionen bedacht und mit Wahrscheinlichkeiten versehen werden. Der Agent kann(/muss) weitere Schritte unternehmen den Zustand seiner Umgebung genauer kennenzulernen. Bei einem Schachspiel hingegen kennt der Agent alle machbaren Züge des Gegners und seiner selbst, kann Bedrohungen erkennen und sich für jeden Zug des Gegners eine Antwort berechnen. Es ist somit auch mit genug Rechenzeit die optimale Aktion zu berechnen.
+		
+		\subsubsection{Discrete \& Continous}
+		Zu diesem Begriffspaar stehen uns nur sehr wenige Informationen bereit, daher legen wir die Begriffe wie folgt aus. Eine diskrete Umgebung besitzt eine endliche Menge an Zuständen und ein Agent in dieser Umgebung kann nur eine endliche Menge an Aktionen durchführen. Greifen wir auf das oben genannte Schachspiel zurück. Es gibt eine endliche Menge an Stellungen und pro Zug können nur eine endliche Menge an (legalen) Zügen gespielt werden. Der Gegensatz dazu wird mit continuous beschrieben. Hier haben wir eben kein vorgegebenes Raster auf dem Schachfiguren stehen. Der Agent muss nicht mit einer begrenzten Anzahl an eindeutig definierten Perzeptionen und Aktionen umgehen, sondern mit einer großen Bandbreite an Werten. Ein selbst fahrendes Auto wäre hierfür ein Beispiel. Es muss mit diversen Situation umgehen können und kontinuierlich das eigene Verhalten an die Umgebung anpassen.
+				
+		\subsubsection{Deterministic \& Stochastic}
+		In einigen Fällen kann ein Agent nicht genau wissen in welchen Zustand sich die Umgebung nach einer Aktion befindet. Es können nur Wahrscheinlichkeiten für verschiedene Zustände berechnet werden. Der Agent befindet sich in einer nicht-deterministischen, stochastischen Umgebung. So ist zum Beispiel ein Pokerspiel für einen Agenten stochastisch. Es gibt für das Auftreten verschiedener Karten Wahrscheinlichkeiten, die in das Spiel mit einbezogen werden müssen. Die Veränderung der Umgebung hängt nicht nur vom aktuellen Zustand und der Aktion des Agenten ab. Dem gegenüber steht eine deterministische Umgebung, wie beispielsweise ein Kreuzworträtsel, dass es zu lösen gilt. Hier hat nur der Agent Einfluss auf die Umgebung und kann somit den nächsten Zustand der Umgebung, der auf eine Aktion folgt, bestimmen. Dies funktioniert aber nur in abgegrenzten Umgebungen. Die Welt ist nicht deterministisch.
+\end{document}
