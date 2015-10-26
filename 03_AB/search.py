@@ -3,6 +3,10 @@
 # Imports
 import sys
 
+# Constants
+bound = 'x'
+goal = 'g'
+
 # Functions
 def printField(field):
 	for i in range(len(field)):
@@ -16,9 +20,6 @@ def searchFor(c,field):
 
 def searchStart(field):
 	return searchFor('s', field)
-	
-bound = 'x'
-goal = 'g'
 
 def bfs(space):
   start = searchStart(space)
