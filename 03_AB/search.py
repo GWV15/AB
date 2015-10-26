@@ -16,6 +16,9 @@ def searchFor(c,field):
 
 def searchStart(field):
 	return searchFor('s', field)
+	
+bound = 'x'
+goal = 'g'
 
 def bfs(space):
   start = searchStart(space)
@@ -26,13 +29,13 @@ def bfs(space):
       node = path[-1]
       if space[node[0]][node[1]] = goal:
         return path
-      if space[node[0]+1][node[1]+0] != x:
+      if space[node[0]+1][node[1]+0] != bound:
         frontier.append(path.append(node[0]+1,node[1]+0))
-      if space[node[0]+0][node[1]+1] != x:
+      if space[node[0]+0][node[1]+1] != bound:
         frontier.append(path.append(node[0]+0,node[1]+1))
-      if space[node[0]-1][node[1]+0] != x:
+      if space[node[0]-1][node[1]+0] != bound:
         frontier.append(path.append(node[0]-1,node[1]+0))
-      if space[node[0]+0][node[1]-1] != x:
+      if space[node[0]+0][node[1]-1] != bound:
         frontier.append(path.append(node[0]+0,node[1]-1))
   # index out of bounds muss noch ausgeschlossen werden
   return 0
