@@ -4,8 +4,9 @@
 import sys
 
 # Constants
-bound = 'x'
-goal = 'g'
+bound	= 'x'
+goal	= 'g'
+start	= 's'
 
 # Functions
 def printField(field):
@@ -19,7 +20,7 @@ def searchFor(c,field):
 			if field[i][j] == c: return (i,j)
 
 def searchStart(field):
-	return searchFor('s', field)
+	return searchFor(start, field)
 
 def bfs(space):
   start = searchStart(space)
@@ -28,17 +29,21 @@ def bfs(space):
     for path in frontier:
       frontier.remove(path)
       node = path[-1]
-      if space[node[0]][node[1]] = goal:
+      if space[node[0]][node[1]] == goal:
         return path
-      if space[node[0]+1][node[1]+0] != bound:
-        frontier.append(path.append(node[0]+1,node[1]+0))
-      if space[node[0]+0][node[1]+1] != bound:
-        frontier.append(path.append(node[0]+0,node[1]+1))
-      if space[node[0]-1][node[1]+0] != bound:
-        frontier.append(path.append(node[0]-1,node[1]+0))
-      if space[node[0]+0][node[1]-1] != bound:
-        frontier.append(path.append(node[0]+0,node[1]-1))
+      if space[node[0] + 1][node[1] + 0] != bound:
+        frontier.append(path.append(node[0] + 1, node[1] + 0))
+
+      if space[node[0] + 0][node[1] + 1] != bound:
+        frontier.append(path.append(node[0] + 0, node[1] + 1))
+
+      if space[node[0] - 1][node[1] + 0] != bound:
+        frontier.append(path.append(node[0] - 1, node[1] + 0))
+
+      if space[node[0] + 0][node[1] - 1] != bound:
+        frontier.append(path.append(node[0] + 0, node[1] - 1))
   # index out of bounds muss noch ausgeschlossen werden
+  print (frontier)
   return 0
 
 
@@ -65,3 +70,5 @@ c = 's'
 print("Character", c, "found at", searchFor(c,field))
 c = 'g'
 print("Character", c, "found at", searchFor(c,field))
+
+bfs(field)
