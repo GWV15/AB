@@ -27,22 +27,28 @@ def bfs(field):
   frontier = [[start]]
   while len(frontier)>0:
     for path in frontier:
-      frontier.remove(path)
+      print("frontier: " ,frontier)
+      print("path: " , path)
       node = path[-1]
       if field[node[0]][node[1]] == goal:
         return path
       if field[node[0] + 1][node[1] + 0] != bound:
-        frontier.append(path.append(node[0] + 1, node[1] + 0))
+        print("Right Neighbor found")
+        frontier.append(path.append((node[0] + 1, node[1] + 0)))
 
       if field[node[0] + 0][node[1] + 1] != bound:
-        frontier.append(path.append(node[0] + 0, node[1] + 1))
+        frontier.append(path.append((node[0] + 0, node[1] + 1)))
+        print("Top Neighbor found")
 
       if field[node[0] - 1][node[1] + 0] != bound:
-        frontier.append(path.append(node[0] - 1, node[1] + 0))
+        frontier.append(path.append((node[0] - 1, node[1] + 0)))
+        print("Below Neighbor found")
 
       if field[node[0] + 0][node[1] - 1] != bound:
-        frontier.append(path.append(node[0] + 0, node[1] - 1))
-  # index out of bounds muss noch ausgeschlossen werden
+        frontier.append(path.append((node[0] + 0, node[1] - 1)))
+        print("Left Neighbor found")
+
+    frontier.remove(path)
   print (frontier)
   return 0
 
