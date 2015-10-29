@@ -11,7 +11,7 @@ start	= 's'
 # Functions
 def printField(field):
 	for i in range(len(field)):
-		print(field[i])
+		print(''.join(field[i]))
 	pass
 
 def searchFor(c,field):
@@ -27,9 +27,6 @@ def bfs(field):
   frontier = [[start]]
   while len(frontier)>0:
     for path in frontier:
-      #print("frontier: " ,frontier)
-      #print("path: " , path)
-      #print(len(frontier))
       node = path[-1]
       w = (node[0] + 1, node[1]  + 0)
       a = (node[0] + 0, node[1]  - 1)
@@ -37,10 +34,8 @@ def bfs(field):
       d = (node[0] + 0, node[1]  + 1)
 
       if field[node[0]][node[1]] == goal:
-        print (path)
         return path
       if (field[w[0]][w[1]] != bound) and all(w not in path for path in frontier):
-        #print("Right Neighbor found")
         path_found = [e for e in path]
         path_found.append(w)
         frontier.append(path_found)
@@ -49,24 +44,26 @@ def bfs(field):
         path_found = [e for e in path]
         path_found.append(a)
         frontier.append(path_found)
-        #print("Top Neighbor found")
 
       if (field[s[0]][s[1]] != bound) and all(s not in path for path in frontier):
         path_found = [e for e in path]
         path_found.append(s)
         frontier.append(path_found)
-        #print("Below Neighbor found")
 
       if (field[d[0]][d[1]] != bound) and all(d not in path for path in frontier):
         path_found = [e for e in path]
         path_found.append(d)
         frontier.append(path_found)
 
-        #print("Left Neighbor found")
-
     frontier.remove(path)
   return 0
 
+def updateField(field, path):
+  start = path[0]
+  goal = path[-1]
+  for el in path:
+    if el is not start and el is not goal:
+      field[el[0]][el[1]] = '+'
 
 #    0    5   10   15  19
 #    |    |    |    |   |     
@@ -82,7 +79,7 @@ def bfs(field):
 # 09-xxxxxxxxxxxxxxxxxxxx
 
 # loading the field
-field = [line.rstrip('\n') for line in open(sys.argv[1])]
+field = [list(line.rstrip('\n')) for line in open(sys.argv[1])]
 print("Environment:\n")
 printField(field)
 print("\n")
@@ -92,4 +89,10 @@ print("Character", c, "found at", searchFor(c,field))
 c = 'g'
 print("Character", c, "found at", searchFor(c,field))
 
-bfs(field)
+print("BFS Path:\n")
+print(bfs(field))
+print("\n")
+
+print("Visualized Path:\n")
+updateField(field,bfs(field))
+printField(field)
