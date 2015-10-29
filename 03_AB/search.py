@@ -23,8 +23,12 @@ def searchStart(field):
 	return searchFor(start, field)
 
 def bfs(field):
-  start = searchStart(field)
-  frontier = [[start]]
+  #find start and goal position
+  start_pos = searchStart(field)
+  goal_pos= searchFor(goal,field)
+  #initialize frontier with only start node
+  frontier = [[start_pos]]
+  #repeat while frontier is not empty:  
   while len(frontier)>0:
     for path in frontier:
       node = path[-1]
@@ -32,28 +36,16 @@ def bfs(field):
       a = (node[0] + 0, node[1]  - 1)
       s = (node[0] - 1, node[1]  + 0)
       d = (node[0] + 0, node[1]  + 1)
-
-      if field[node[0]][node[1]] == goal:
+      neighbors = [w,a,s,d]
+      #return path if goal is the end of path
+      if node == goal_pos:
         return path
-      if (field[w[0]][w[1]] != bound) and all(w not in path for path in frontier):
-        path_found = [e for e in path]
-        path_found.append(w)
-        frontier.append(path_found)
-       
-      if (field[a[0]][a[1]] != bound) and all(a not in path for path in frontier):
-        path_found = [e for e in path]
-        path_found.append(a)
-        frontier.append(path_found)
-
-      if (field[s[0]][s[1]] != bound) and all(s not in path for path in frontier):
-        path_found = [e for e in path]
-        path_found.append(s)
-        frontier.append(path_found)
-
-      if (field[d[0]][d[1]] != bound) and all(d not in path for path in frontier):
-        path_found = [e for e in path]
-        path_found.append(d)
-        frontier.append(path_found)
+      #try to expand each path in all directions which havent been visited yet and are not boundaries
+      for n in neighbors:
+        if (field[n[0]][n[1]] != bound) and all(n not in path for path in frontier):
+          path_found = [e for e in path]
+          path_found.append(n)
+          frontier.append(path_found)
 
     frontier.remove(path)
   return 0
