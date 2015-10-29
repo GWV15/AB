@@ -27,29 +27,44 @@ def bfs(field):
   frontier = [[start]]
   while len(frontier)>0:
     for path in frontier:
-      print("frontier: " ,frontier)
-      print("path: " , path)
+      #print("frontier: " ,frontier)
+      #print("path: " , path)
+      #print(len(frontier))
       node = path[-1]
+      w = (node[0] + 1, node[1]  + 0)
+      a = (node[0] + 0, node[1]  - 1)
+      s = (node[0] - 1, node[1]  + 0)
+      d = (node[0] + 0, node[1]  + 1)
+
       if field[node[0]][node[1]] == goal:
+        print (path)
         return path
-      if field[node[0] + 1][node[1] + 0] != bound:
-        print("Right Neighbor found")
-        frontier.append(path.append((node[0] + 1, node[1] + 0)))
+      if (field[w[0]][w[1]] != bound) and all(w not in path for path in frontier):
+        #print("Right Neighbor found")
+        path_found = [e for e in path]
+        path_found.append(w)
+        frontier.append(path_found)
+       
+      if (field[a[0]][a[1]] != bound) and all(a not in path for path in frontier):
+        path_found = [e for e in path]
+        path_found.append(a)
+        frontier.append(path_found)
+        #print("Top Neighbor found")
 
-      if field[node[0] + 0][node[1] + 1] != bound:
-        frontier.append(path.append((node[0] + 0, node[1] + 1)))
-        print("Top Neighbor found")
+      if (field[s[0]][s[1]] != bound) and all(s not in path for path in frontier):
+        path_found = [e for e in path]
+        path_found.append(s)
+        frontier.append(path_found)
+        #print("Below Neighbor found")
 
-      if field[node[0] - 1][node[1] + 0] != bound:
-        frontier.append(path.append((node[0] - 1, node[1] + 0)))
-        print("Below Neighbor found")
+      if (field[d[0]][d[1]] != bound) and all(d not in path for path in frontier):
+        path_found = [e for e in path]
+        path_found.append(d)
+        frontier.append(path_found)
 
-      if field[node[0] + 0][node[1] - 1] != bound:
-        frontier.append(path.append((node[0] + 0, node[1] - 1)))
-        print("Left Neighbor found")
+        #print("Left Neighbor found")
 
     frontier.remove(path)
-  print (frontier)
   return 0
 
 
