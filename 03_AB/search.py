@@ -1,5 +1,10 @@
 #!/usr/bin/python
 
+# GWV 15/16 Abgabe - Zettel 3
+# Tobergte, Budde, Oslani, Bauregger
+#
+# Johannes Twiefel | Montags 12 - 14 Uhr | F-009 
+
 # Imports
 import sys
 
