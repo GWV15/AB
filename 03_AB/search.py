@@ -115,7 +115,11 @@ def drawPath(path, field):
 # Main method
 def main():
 	# Loading the field
-	field = [list(line.rstrip('\n')) for line in open(sys.argv[1])]
+	if len(sys.argv) == 2:
+		field = [list(line.rstrip('\n')) for line in open(sys.argv[1])]
+	else:
+		print("There has to be exactly one command line argument. It should be our enviroment.")
+		return
 
 	printField(field)
 
