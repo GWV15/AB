@@ -116,6 +116,9 @@ def dfs(field):
 		# Remove the old path
 		frontier.remove(path)
 
+def AStarSearch():
+	
+
 # Main method
 def main():
 	# Load the field
