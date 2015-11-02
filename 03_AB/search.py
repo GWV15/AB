@@ -14,15 +14,13 @@ goal	= 'g'
 start	= 's'
 
 # Functions
+
+
+# Print the given field
+# field - Field to print
 def printField(field):
-
-	# Draw the field
-	print("Environment:\n")
-
 	for i in range(len(field)):
 		print(''.join(field[i]))
-
-	print("\n")
 
 # Search for character in field
 # c		- Character to find
@@ -38,6 +36,15 @@ def searchFor(c,field):
 def isBound(pos,field):
 	return field[pos[0]][pos[1]] == bound
 
+# Draws the path in the field
+# path	- the path to draw
+# field - the field to draw on
+def drawPath(path, field):
+	start = path[0]
+	goal = path[-1]
+	for el in path:
+		if el is not start and el is not goal:
+			field[el[0]][el[1]] = '+'
 
 # Performes a bfs
 # field - Search space
@@ -92,6 +99,7 @@ def dfs(field):
 		west  = (head[0], head[1] - 1)
 		east  = (head[0], head[1] + 1)
 
+		# Iterate over the neighborhood
 		for nextNode in [north,east,south,west]:
 			# Test nextNode if it is a 'x' and whether it is already in the stack
 			if not isBound(nextNode,field) and all(nextNode not in p for p in frontier):
@@ -102,62 +110,45 @@ def dfs(field):
 				# Are we finished?
 				if new_path[-1] == tuple_goal: return new_path 
 
-				# Add the newfound to the frontier
+				# Add the newfound path to the frontier
 				frontier.append(new_path)
+
 		# Remove the old path
 		frontier.remove(path)
 
-# Draws the path in the field
-# path	- the path to draw
-# field - the field to draw on
-def drawPath(path, field):
-	start = path[0]
-	goal = path[-1]
-	for el in path:
-		if el is not start and el is not goal:
-			field[el[0]][el[1]] = '+'
-
 # Main method
 def main():
-	# Loading the field
+	# Load the field
 	if len(sys.argv) == 2:
 		field = [list(line.rstrip('\n')) for line in open(sys.argv[1])]
 	else:
 		print("There has to be exactly one command line argument. It should be our enviroment.")
 		return
 
+	# Print the field
+	print("Enviroment")
 	printField(field)
 
 	# Some Info
 	print("Character", start, "found at", searchFor(start,field))
-	print("Character", goal, "found at", searchFor(goal,field))
+	print("Character", goal , "found at", searchFor(goal,field), "\n")
 
-	bfs_path = bfs(field)
-	dfs_path = dfs(field)
+	# Ask for algorithm
+	howToSearch = input("Should I do the \"bfs\" or \"dfs\"?:")
+	# Ask until valid answer is given
+	while(howToSearch != "dfs" and howToSearch != "bfs"):
+		howToSearch = input("I didn't understand you. \"bfs\" or \"dfs\"?:")
 
-	print("BFS Path:\n")
-	print(bfs_path)
-	print("\n")
+	# Run the search
+	if  (howToSearch == "dfs"): search_path = dfs(field)
+	elif(howToSearch == "bfs"): search_path = bfs(field)
 
-	print("DFS Path:\n")
-	print(dfs_path)
-	print("\n")
+	# Print the path
+	print(howToSearch.upper(), "Path:\n", search_path, "\n")
+	print("Visualized Path:\n")
+	drawPath(search_path,field) # Draw the path to the field
+	printField(field) # Print the field
 
-
-	whattodraw = ""
-	while(whattodraw != "dfs" and whattodraw != "bfs"):
-		whattodraw = input("Should I draw the \"bfs\" or \"dfs\"?:")
-
-	if(whattodraw == "dfs"):
-		print("Visualized Path:\n")
-		drawPath(dfs_path,field)
-		printField(field)
-	else:
-		print("Visualized Path:\n")
-		drawPath(bfs_path,field)
-		printField(field)
-
-
-# Main
+# Run the main method
 if __name__ == "__main__":
     main()
