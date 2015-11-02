@@ -116,7 +116,11 @@ def dfs(field):
 		# Remove the old path
 		frontier.remove(path)
 
+def cost(path,goal_pos):
+	return len(path) + abs((path[-1][0] - goal_pos[0])) + abs((path[-1][1] - goal_pos[1]))
+
 def AStarSearch(field):
+
 	#find start and goal position
 	start_pos = searchFor(start,field)
 	goal_pos = searchFor(goal,field)
@@ -126,10 +130,12 @@ def AStarSearch(field):
 
 	#repeat while frontier is not empty:
 	while frontier:
+		current_costs = 0
+		current_path = None
 		for path in frontier:
-			if cost(path) < currentCosts or currentCosts == 0:
-				currentCosts = cost(path)
-				currentPath = path
+			if cost(path, goal_pos) < current_costs or current_costs == 0:
+				current_costs = cost(path, goal_pos)
+				current_path = path
 			else:
 				continue
 
@@ -154,7 +160,7 @@ def AStarSearch(field):
 				new_path.append(nextNode)
 
 				# Are we finished?
-				if new_path[-1] == tuple_goal: return new_path 
+				if new_path[-1] == goal_pos: return new_path 
 
 				# Add the newfound path to the frontier
 				frontier.append(new_path)
@@ -178,14 +184,15 @@ def main():
 	print("Character", goal , "found at", searchFor(goal,field), "\n")
 
 	# Ask for algorithm
-	howToSearch = input("Should I do the \"bfs\" or \"dfs\"?:")
+	howToSearch = input("Should I do the \"bfs\", \"dfs\" or \"astar\"?:")
 	# Ask until valid answer is given
-	while(howToSearch != "dfs" and howToSearch != "bfs"):
-		howToSearch = input("I didn't understand you. \"bfs\" or \"dfs\"?:")
+	while(howToSearch != "dfs" and howToSearch != "bfs" and howToSearch != "astar"):
+		howToSearch = input("I didn't understand you. \"bfs\", \"dfs\" or \"astar\"?:")
 
 	# Run the search
-	if  (howToSearch == "dfs"): search_path = dfs(field)
-	elif(howToSearch == "bfs"): search_path = bfs(field)
+	if  (howToSearch == "dfs"  ): search_path = dfs(field)
+	elif(howToSearch == "bfs"  ): search_path = bfs(field)
+	elif(howToSearch == "astar"): search_path = AStarSearch(field)
 
 	# Print the path
 	print(howToSearch.upper(), "Path:\n", search_path, "\n")
