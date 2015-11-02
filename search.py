@@ -108,8 +108,9 @@ def dfs(field):
 
 		# Last node of path
 		head = path[-1]
-		print(frontier)
-
+		printField(drawPath(path,field))
+		print(path)
+		input("step")
 		# Get the neighborhood
 		north = (head[0] + 1, head[1])
 		south = (head[0] - 1, head[1])
@@ -130,7 +131,7 @@ def dfs(field):
 				# Add the newfound path to the frontier
 				frontier.append(new_path)
 			elif isPortal(nextNode,field) and all(nextNode not in p for p in frontier):
-				if all(searchPortalPoint(nextNode,field) not in p for p in frontier):
+				if searchPortalPoint(nextNode,field) and all(searchPortalPoint(nextNode,field) not in p for p in frontier):
 					new_path = [node for node in path]
 					new_path.append(searchPortalPoint(nextNode,field))
 
