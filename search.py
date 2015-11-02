@@ -7,6 +7,7 @@
 
 # Imports
 import sys
+import numpy as np
 
 # Constants
 bound	= 'x'
@@ -130,14 +131,15 @@ def AStarSearch(field):
 
 	#repeat while frontier is not empty:
 	while frontier:
-		current_costs = 0
-		current_path = None
-		for path in frontier:
-			if cost(path, goal_pos) < current_costs or current_costs == 0:
-				current_costs = cost(path, goal_pos)
-				current_path = path
-			else:
-				continue
+		#current_costs = 0
+		#current_path = None
+		#for path in frontier:
+		#	if cost(path, goal_pos) < current_costs or current_costs == 0:
+		#		current_costs = cost(path, goal_pos)
+		#		current_path = path
+		#	else:
+		#		continue
+		current_path = frontier[np.argmin([cost(path,goal_pos) for path in frontier])]
 
 		# Take the old path out
 		frontier.remove(current_path)
