@@ -46,18 +46,22 @@ def searchPortalPoint(pos,field):
 	portalnumber = field[pos[0]][pos[1]]
 	for i in range(len(field)):
 		for j in range(len(field[i])):
-			if field[i][j] == portalnumber and field[i][j] != field[pos[0]][pos[1]]: return field[i][j]
+			if field[i][j] == portalnumber:
+				if not (i == pos[0] and j == pos[1]): 
+					return (i,j)
 
 # Draws the path in the field
 # path	- the path to draw
 # field - the field to draw on
 def drawPath(path, field):
+	tmp = [line for line in field]
 	if path:
 		start = path[0]
 		goal = path[-1]
 		for el in path:
 			if el is not start and el is not goal:
-				field[el[0]][el[1]] = '+'
+				tmp[el[0]][el[1]] = '+'
+	return tmp
 
 # Performes a bfs
 # field - Search space
@@ -92,19 +96,19 @@ def bfs(field):
 # field - Search space
 def dfs(field):
 	# Find goal
-	tuple_goal = searchFor(goal, field)
+	goal_pos = searchFor(goal, field)
 
 	# Create frontier with start in it
 	frontier = [[searchFor(start, field)]]
 
 	# Search as long as frontier != []
 	while frontier:
-
 		# Most recent path
 		path = frontier[-1]
 
 		# Last node of path
 		head = path[-1]
+		print(frontier)
 
 		# Get the neighborhood
 		north = (head[0] + 1, head[1])
@@ -115,16 +119,24 @@ def dfs(field):
 		# Iterate over the neighborhood
 		for nextNode in [north,east,south,west]:
 			# Test nextNode if it is a 'x' and whether it is already in the stack
-			if not isBound(nextNode,field) and all(nextNode not in p for p in frontier):
+			if not isPortal(nextNode,field) and not isBound(nextNode,field) and all(nextNode not in p for p in frontier):
 				# Copy the path and add nextNode to it
 				new_path = [node for node in path] 
 				new_path.append(nextNode)
 
 				# Are we finished?
-				if new_path[-1] == tuple_goal: return new_path 
+				if new_path[-1] == goal_pos: return new_path 
 
 				# Add the newfound path to the frontier
 				frontier.append(new_path)
+			elif isPortal(nextNode,field) and all(nextNode not in p for p in frontier):
+				if all(searchPortalPoint(nextNode,field) not in p for p in frontier):
+					new_path = [node for node in path]
+					new_path.append(searchPortalPoint(nextNode,field))
+
+					if new_path[-1] == goal_pos: return new_path
+
+					frontier.append(new_path)
 
 		# Remove the old path
 		frontier.remove(path)
@@ -178,6 +190,13 @@ def AStarSearch(field):
 
 				# Add the newfound path to the frontier
 				frontier.append(new_path)
+			elif isPortal(nextNode,field) and all(nextNode not in p for p in frontier):
+				new_path = [node for node in current_path]
+				new_path.append(searchPortalPoint(nextNode,field))
+
+				if new_path[-1] == goal_pos: return new_path
+
+				frontier.append(new_path)
 
 
 # Main method
@@ -211,8 +230,8 @@ def main():
 	# Print the path
 	print(howToSearch.upper(), "Path:\n", search_path, "\n")
 	print("Visualized Path:\n")
-	drawPath(search_path,field) # Draw the path to the field
-	printField(field) # Print the field
+	printField(drawPath(search_path,field)) # Draw the path to the field
+	#printField(field) # Print the field
 
 # Run the main method
 if __name__ == "__main__":
