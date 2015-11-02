@@ -36,7 +36,8 @@ def searchFor(c,field):
 # field - Search space
 def isBound(pos,field):
 	return field[pos[0]][pos[1]] == bound
-
+def isPortal(pos,field):
+	return field[pos[0]][pos[1]] in [chr(el+ord('0')) for el in range(10)]
 # Draws the path in the field
 # path	- the path to draw
 # field - the field to draw on
