@@ -36,8 +36,18 @@ def searchFor(c,field):
 # field - Search space
 def isBound(pos,field):
 	return field[pos[0]][pos[1]] == bound
+
+# Returns true if pos in field is a Portal
 def isPortal(pos,field):
 	return field[pos[0]][pos[1]] in [chr(el+ord('0')) for el in range(10)]
+
+# Returns the position of the other point of the input portal position
+def searchPortalPoint(pos,field):
+	portalnumber = field[pos[0]][pos[1]]
+	for i in range(len(field)):
+		for j in range(len(field[i])):
+			if field[i][j] == portalnumber and field[i][j] != field[pos[0]][pos[1]]: return field[i][j]
+
 # Draws the path in the field
 # path	- the path to draw
 # field - the field to draw on
@@ -158,7 +168,7 @@ def AStarSearch(field):
 		# Iterate over the neighborhood
 		for nextNode in [north,east,south,west]:
 			# Test nextNode if it is a 'x' and whether it is already in the stack
-			if not isBound(nextNode,field) and all(nextNode not in p for p in frontier):
+			if not isPortal(nextNode,field) and not isBound(nextNode,field) and all(nextNode not in p for p in frontier):
 				# Copy the path and add nextNode to it
 				new_path = [node for node in current_path] 
 				new_path.append(nextNode)
