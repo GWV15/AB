@@ -14,15 +14,13 @@ goal	= 'g'
 start	= 's'
 
 # Functions
+
+
+# Print the given field
+# field - Field to print
 def printField(field):
-
-	# Draw the field
-	print("Environment:\n")
-
 	for i in range(len(field)):
 		print(''.join(field[i]))
-
-	print("\n")
 
 # Search for character in field
 # c		- Character to find
@@ -126,37 +124,26 @@ def main():
 		print("There has to be exactly one command line argument. It should be our enviroment.")
 		return
 
+	print("Enviroment")
 	printField(field)
 
 	# Some Info
 	print("Character", start, "found at", searchFor(start,field))
-	print("Character", goal, "found at", searchFor(goal,field))
+	print("Character", goal , "found at", searchFor(goal,field), "\n")
 
-	bfs_path = bfs(field)
-	dfs_path = dfs(field)
+	howToSearch = input("Should I do the \"bfs\" or \"dfs\"?:")
+	while(howToSearch != "dfs" and howToSearch != "bfs"):
+		howToSearch = input("I didn't understand you. \"bfs\" or \"dfs\"?:")
 
-	print("BFS Path:\n")
-	print(bfs_path)
-	print("\n")
+	if(howToSearch == "dfs"):
+		search_path = dfs(field)
+	elif(howToSearch == "bfs"):
+		search_path = dfs(field)
 
-	print("DFS Path:\n")
-	print(dfs_path)
-	print("\n")
-
-
-	whattodraw = ""
-	while(whattodraw != "dfs" and whattodraw != "bfs"):
-		whattodraw = input("Should I draw the \"bfs\" or \"dfs\"?:")
-
-	if(whattodraw == "dfs"):
-		print("Visualized Path:\n")
-		drawPath(dfs_path,field)
-		printField(field)
-	else:
-		print("Visualized Path:\n")
-		drawPath(bfs_path,field)
-		printField(field)
-
+	print(howToSearch.upper(), "Path:\n", search_path, "\n")
+	print("Visualized Path:\n")
+	drawPath(search_path,field)
+	printField(field)
 
 # Main
 if __name__ == "__main__":
