@@ -41,11 +41,12 @@ def isBound(pos,field):
 # path	- the path to draw
 # field - the field to draw on
 def drawPath(path, field):
-	start = path[0]
-	goal = path[-1]
-	for el in path:
-		if el is not start and el is not goal:
-			field[el[0]][el[1]] = '+'
+	if path:
+		start = path[0]
+		goal = path[-1]
+		for el in path:
+			if el is not start and el is not goal:
+				field[el[0]][el[1]] = '+'
 
 # Performes a bfs
 # field - Search space
@@ -73,7 +74,7 @@ def bfs(field):
 					path_found.append(n)
 					frontier.append(path_found)
 
-		frontier.remove(path)
+			frontier.remove(path)
 	return 0
 
 # Performes a dfs
