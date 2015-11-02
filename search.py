@@ -116,8 +116,49 @@ def dfs(field):
 		# Remove the old path
 		frontier.remove(path)
 
-def AStarSearch():
-	
+def AStarSearch(field):
+	#find start and goal position
+	start_pos = searchFor(start,field)
+	goal_pos = searchFor(goal,field)
+
+	#initialize frontier with only start node
+	frontier = [[start_pos]]
+
+	#repeat while frontier is not empty:
+	while frontier:
+		for path in frontier:
+			if cost(path) < currentCosts or currentCosts == 0:
+				currentCosts = cost(path)
+				currentPath = path
+			else:
+				continue
+
+		# Take the old path out
+		frontier.remove(current_path)
+
+		# Last node of path
+		head = current_path[-1]
+
+		# Get the neighborhood
+		north = (head[0] + 1, head[1])
+		south = (head[0] - 1, head[1])
+		west  = (head[0], head[1] - 1)
+		east  = (head[0], head[1] + 1)
+
+		# Iterate over the neighborhood
+		for nextNode in [north,east,south,west]:
+			# Test nextNode if it is a 'x' and whether it is already in the stack
+			if not isBound(nextNode,field) and all(nextNode not in p for p in frontier):
+				# Copy the path and add nextNode to it
+				new_path = [node for node in current_path] 
+				new_path.append(nextNode)
+
+				# Are we finished?
+				if new_path[-1] == tuple_goal: return new_path 
+
+				# Add the newfound path to the frontier
+				frontier.append(new_path)
+
 
 # Main method
 def main():
