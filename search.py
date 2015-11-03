@@ -8,7 +8,7 @@
 # Imports
 import sys
 import numpy as np
-
+from copy import deepcopy
 # Constants
 bound	= 'x'
 goal	= 'g'
@@ -54,7 +54,7 @@ def searchPortalPoint(pos,field):
 # path	- the path to draw
 # field - the field to draw on
 def drawPath(path, field):
-	tmp = [line for line in field]
+	tmp = deepcopy(field)
 	if path:
 		start = path[0]
 		goal = path[-1]
