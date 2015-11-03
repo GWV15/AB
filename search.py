@@ -63,6 +63,11 @@ def drawPath(path, field):
 				tmp[el[0]][el[1]] = '+'
 	return tmp
 
+def debug(field,path):
+	printField(drawPath(path,field))
+	print(path)
+	input("step")
+
 # Performes a bfs
 # field - Search space
 def bfs(field):
@@ -75,6 +80,10 @@ def bfs(field):
 	while len(frontier)>0:
 		for path in frontier:
 			node = path[-1]
+
+			debug(field,path)
+
+
 			w = (node[0] + 1, node[1]  + 0)
 			a = (node[0] + 0, node[1]  - 1)
 			s = (node[0] - 1, node[1]  + 0)
@@ -108,9 +117,9 @@ def dfs(field):
 
 		# Last node of path
 		head = path[-1]
-		printField(drawPath(path,field))
-		print(path)
-		input("step")
+
+		debug(field,path)
+		
 		# Get the neighborhood
 		north = (head[0] + 1, head[1])
 		south = (head[0] - 1, head[1])
@@ -171,6 +180,9 @@ def AStarSearch(field):
 
 		# Last node of path
 		head = current_path[-1]
+
+		debug(field,current_path)
+
 
 		# Get the neighborhood
 		north = (head[0] + 1, head[1])
