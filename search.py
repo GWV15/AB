@@ -93,11 +93,18 @@ def bfs(field):
 			if node == goal_pos: return path
 			#try to expand each path in all directions which havent been visited yet and are not boundaries
 			for n in neighbors:
-				if (field[n[0]][n[1]] != bound) and all(n not in path for path in frontier):
+				if not isPortal(n,field) and (field[n[0]][n[1]] != bound) and all(n not in path for path in frontier):
 					path_found = [e for e in path]
 					path_found.append(n)
 					frontier.append(path_found)
+				elif isPortal(n,field) and all(n not in p for p in frontier):
+					if searchPortalPoint(n,field) and all(searchPortalPoint(n,field) not in p for p in frontier):
+						new_path = [node for node in path]
+						new_path.append(searchPortalPoint(n,field))
 
+						if new_path[-1] == goal_pos: return new_path
+
+						frontier.append(new_path)
 			frontier.remove(path)
 	return 0
 
