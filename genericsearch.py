@@ -58,6 +58,15 @@ def searchPortalPoint(pos,field):
 				if not (i == pos[0] and j == pos[1]): 
 					return (i,j)
 
+# Returns a list of positions of all portal nodes
+def getPortalList(field):
+	portallist = []
+	for i in range(len(field)):
+		for j in range(len(field[i])):
+			if isPortal((i,j),field):
+				portallist.append((i,j))
+	return portallist
+
 # Draws the path in the field
 # path	- the path to draw
 # field - the field to draw on
@@ -78,10 +87,20 @@ def debug(field,path):
 	input("step")
 
 # Calculate the estimate cost of a given path to the goal position
-def heuristicCost(path,goal_pos):
-	return len(path) + abs((path[-1][0] - goal_pos[0])) + abs((path[-1][1] - goal_pos[1]))
+# When working with portals an optimistic heuristic assumes that the shortest path the minimum of the normal Manhattan distance
+# and a shortcut with portals, where the maximum shortcut is given by the 
+# Manhattan distance to the nearest portal from the current path + Manhattan distance from the goal to the nearest portal to the goal
+# regargless of any more portals taken on the path
+def heuristicCost(path,goal_pos,field):
+	PortalList = getPortalList(field)
+	if len(PortalList) > 1:
+		nearestPortalHead = PortalList[np.argmin([getManhattanDistance(node,path[-1]) for node in PortalList])]
+		nearestPortalGoal = PortalList[np.argmin([getManhattanDistance(node,goal_pos) for node in PortalList])]
+		return len(path) + min(getManhattanDistance(path[-1],goal_pos),(getManhattanDistance(path[-1],nearestPortalHead)+getManhattanDistance(nearestPortalGoal,goal_pos)))
+	return len(path) + getManhattanDistance(path[-1],goal_pos)
 
-#Returns the 4 orthogonal Neighbors in 2D Space of a Node
+# Returns the 4 orthogonal neighbors in 2D Space of a Node
+# If the neighbor is a portal the counterpart portalnode gets added instead
 def getNeighbors(node,field):
 	w = (node[0] + 1, node[1]  + 0)
 	a = (node[0] + 0, node[1]  - 1)
@@ -92,6 +111,10 @@ def getNeighbors(node,field):
 		if isPortal(n,field):
 			neighborlist[neighborlist.index(n)] = searchPortalPoint(n,field)
 	return neighborlist
+
+# Calculate the Manhattan distance between two points
+def getManhattanDistance(pointA, pointB):
+	return abs((pointA[0] - pointB[0])) + abs((pointA[1] - pointB[1]))
 
 # Generic Search from a List of Starting Points to a List of Endpoints
 # BFS,DFS or A* depends on the given dataStructure
@@ -125,7 +148,7 @@ def genericSearch(field, startPosList, endPosList, _dataStructure=Queue, _heuris
 					if _debug:
 						debug(field,new_path)
 					if _heuristic:
-						frontier.put((heuristicCost(new_path,endPosList[0]),new_path))
+						frontier.put((heuristicCost(new_path,endPosList[0],field),new_path))
 					else:
 						frontier.put(new_path)
 	return 0
