@@ -82,12 +82,16 @@ def heuristicCost(path,goal_pos):
 	return len(path) + abs((path[-1][0] - goal_pos[0])) + abs((path[-1][1] - goal_pos[1]))
 
 #Returns the 4 orthogonal Neighbors in 2D Space of a Node
-def getNeighbors(node):
+def getNeighbors(node,field):
 	w = (node[0] + 1, node[1]  + 0)
 	a = (node[0] + 0, node[1]  - 1)
 	s = (node[0] - 1, node[1]  + 0)
 	d = (node[0] + 0, node[1]  + 1)
-	return [w,a,s,d]
+	neighborlist = [w,a,s,d]
+	for n in neighborlist:
+		if isPortal(n,field):
+			neighborlist[neighborlist.index(n)] = searchPortalPoint(n,field)
+	return neighborlist
 
 # Generic Search from a List of Starting Points to a List of Endpoints
 # BFS,DFS or A* depends on the given dataStructure
@@ -114,8 +118,8 @@ def genericSearch(field, startPosList, endPosList, _dataStructure=Queue, _heuris
 			if head in endPosList:
 				return path
 			visited.append(head)
-			for neighbor in getNeighbors(head):
-				if not isPortal(neighbor, field) and not isBound(neighbor, field):
+			for neighbor in getNeighbors(head,field):
+				if not isBound(neighbor, field):
 					new_path = [n for n in path]
 					new_path.append(neighbor)
 					if _debug:
