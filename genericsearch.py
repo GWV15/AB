@@ -16,6 +16,12 @@ bound	= 'x'
 goal	= 'g'
 start	= 's'
 
+# Class
+
+def MyPriorityQueue(PriorityQueue):
+	def get(self):
+		return super().get()[-1]
+
 # Functions
 
 
