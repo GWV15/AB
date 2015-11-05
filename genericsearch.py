@@ -137,6 +137,16 @@ def main():
 	print("Character", start, "found at", searchFor(start,field))
 	print("Character", goal , "found at", searchFor(goal,field), "\n")
 
+	# Ask for debug output
+
+	showdebug = input("Do you want to debug and step through the pathfinding (y/n)?")
+	debugFlag = False
+	# Ask until valid answer is given
+	while(showdebug != "y" and showdebug != "n"):
+		showdebug = input("please type y or n or try with quotes")
+	if showdebug == "y":
+		debugFlag = True
+
 	# Ask for algorithm
 	howToSearch = input("Should I do the \"bfs\", \"dfs\" or \"astar\"?:")
 	# Ask until valid answer is given
@@ -144,9 +154,9 @@ def main():
 		howToSearch = input("I didn't understand you. \"bfs\", \"dfs\" or \"astar\"?:")
 
 	# Run the search
-	if  (howToSearch == "dfs"  ): search_path = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=LifoQueue,_heuristic=False,_debug=True)
-	elif  (howToSearch == "bfs"  ): search_path = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=Queue,_heuristic=False,_debug=True)
-	elif  (howToSearch == "astar"  ): search_path = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=PriorityQueue,_heuristic=True,_debug=True)
+	if  (howToSearch == "dfs"  ): search_path = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=LifoQueue,_heuristic=False,_debug=debugFlag)
+	elif  (howToSearch == "bfs"  ): search_path = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=Queue,_heuristic=False,_debug=debugFlag)
+	elif  (howToSearch == "astar"  ): search_path = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=PriorityQueue,_heuristic=True,_debug=debugFlag)
 
 	# Print the path
 	print(howToSearch.upper(), "Path:\n", search_path, "\n")
