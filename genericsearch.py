@@ -13,9 +13,9 @@ from queue import LifoQueue, Queue, PriorityQueue
 from timeit import default_timer as timer
 
 # Constants
-bound	= 'x'
-goal	= 'g'
-start	= 's'
+bound_char	 = 'x'
+goal_char	 = 'g'
+start_char	 = 's'
 searches = ["bfs","dfs","astar"]
 
 # Class
@@ -46,7 +46,7 @@ def searchFor(field,c):
 # field - search space
 # pos	- position in field
 def isBound(field,pos):
-	return field[pos[0]][pos[1]] == bound
+	return field[pos[0]][pos[1]] == bound_char
 
 
 # Returns true if pos in field is a Portal
@@ -146,19 +146,19 @@ def getManhattanDistance(pointA, pointB):
 # Generic Search from a List of Starting Points to a List of Endpoints
 # BFS,DFS or A* depends on the given dataStructure
 # field 			- search space
-# startPosList		- list of possible start positions
-# endPosList		- list of possible end positions
+# start_pos_list	- list of possible start positions
+# end_pos_list		- list of possible end positions
 # _dataStructure	- data structure for the frontier (decides which search alg. to use)
 # _heuristic		- flag: use heuristics
 # _debug			- flag: use debugging method
-def genericSearch(field, startPosList, endPosList, _dataStructure=Queue, _heuristic=False, _debug=False):
+def genericSearch(field, start_pos_list, end_pos_list, _dataStructure=Queue, _heuristic=False, _debug=False):
 	# Init
 	visited = []
 	frontier = _dataStructure()
 	max_frontier_len = 0
 
 	# Put all start positions in the frontier
-	for startPos in startPosList:
+	for startPos in start_pos_list:
 		if _heuristic:
 			frontier.put((0,[startPos]))
 		else:
@@ -188,7 +188,7 @@ def genericSearch(field, startPosList, endPosList, _dataStructure=Queue, _heuris
 			visited.append(head)
 			
 			# Are we finished?
-			if head in endPosList:
+			if head in end_pos_list:
 				tend = timer()
 				elapsed_time = tend - tstart
 				return [path, len(visited), max_frontier_len, elapsed_time]
@@ -208,7 +208,7 @@ def genericSearch(field, startPosList, endPosList, _dataStructure=Queue, _heuris
 
 					# Use heuristics if flag is set
 					if _heuristic:
-						frontier.put((heuristicCost(field,new_path,endPosList[0]),new_path))
+						frontier.put((heuristicCost(field,new_path,end_pos_list[0]),new_path))
 					else:
 						frontier.put(new_path)
 
@@ -261,9 +261,11 @@ def runSearch(field,algorithm,debug):# Run the search
 	if algorithm not in searches:
 		print("Given search is not defined")
 		return []
-	if algorithm == "astar": return genericSearch(field,[searchFor(field,start)],[searchFor(field,goal)],_dataStructure=PriorityQueue,	_heuristic=True	,_debug=debug)
-	elif algorithm == "dfs": return genericSearch(field,[searchFor(field,start)],[searchFor(field,goal)],_dataStructure=LifoQueue,		_heuristic=False,_debug=debug)
-	elif algorithm == "bfs": return genericSearch(field,[searchFor(field,start)],[searchFor(field,goal)],_dataStructure=Queue,			_heuristic=False,_debug=debug)
+	start_list = [searchFor(field,start_char)]
+	goal_list = [searchFor(field,goal_char)]
+	if algorithm == "astar": return genericSearch(field,start_list,goal_list,_dataStructure=PriorityQueue,_heuristic=True	,_debug=debug)
+	elif algorithm == "dfs": return genericSearch(field,start_list,goal_list,_dataStructure=LifoQueue,	_heuristic=False,_debug=debug)
+	elif algorithm == "bfs": return genericSearch(field,start_list,goal_list,_dataStructure=Queue,		_heuristic=False,_debug=debug)
 
 
 # Main method
@@ -279,8 +281,8 @@ def main():
 	printField(field)
 
 	# Some Info
-	print("Character", start, "found at", searchFor(field,start),
-		"\nCharacter", goal , "found at", searchFor(field,goal))
+	print("Character", start_char, "found at", searchFor(field,start_char),
+		"\nCharacter", goal_char, "found at", searchFor(field,goal_char))
 
 	# Ask for debug output
 	debugFlag	= askForAnswer(3, "Do you want to debug and step through the pathfinding?", "I didn't understand you.")
