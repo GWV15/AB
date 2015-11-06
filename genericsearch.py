@@ -159,11 +159,10 @@ def genericSearch(field, start_pos_list, end_pos_list, _dataStructure=Queue, _he
 
 	# Put all start positions in the frontier
 	for startPos in start_pos_list:
-		if _heuristic:
-			frontier.put((0,[startPos]))
-		else:
-			frontier.put([startPos])
+		if _heuristic: frontier.put((0,[startPos]))
+		else: frontier.put([startPos])
 
+	# Start time measurement
 	tstart = timer()
 
 	# Search as long as the frontier has some entries left
@@ -173,10 +172,8 @@ def genericSearch(field, start_pos_list, end_pos_list, _dataStructure=Queue, _he
 
 		# Get the next path 
 		path = []
-		if _heuristic:
-			path = frontier.get()[-1]
-		else:
-			path = frontier.get()
+		if _heuristic: path = frontier.get()[-1]
+		else: path = frontier.get()
 
 		# Get the node we want to expand
 		head = path[-1]
@@ -207,14 +204,14 @@ def genericSearch(field, start_pos_list, end_pos_list, _dataStructure=Queue, _he
 					if _debug: debug(field,new_path)
 
 					# Use heuristics if flag is set
-					if _heuristic:
-						frontier.put((heuristicCost(field,new_path,end_pos_list[0]),new_path))
-					else:
-						frontier.put(new_path)
+					if not _heuristic: frontier.put(new_path)
+					else: frontier.put((heuristicCost(field,new_path,end_pos_list[0]),new_path))
 
-	# When the frontier is empty no path was found. Return 0 as path.
+	# Start time measurement
 	tend = timer()
 	elapsed_time = tend - tstart
+	
+	# When the frontier is empty no path was found. Return 0 as path.
 	return [0, len(visited), max_frontier_len, elapsed_time]
 
 
