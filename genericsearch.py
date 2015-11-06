@@ -5,27 +5,25 @@
 #
 # Johannes Twiefel | Montags 12 - 14 Uhr | F-009 
 
-# Imports
+### Imports ##############################
 import sys
 import numpy as np ## INSTALL
 from copy import deepcopy
 from queue import LifoQueue, Queue, PriorityQueue
 from timeit import default_timer as timer
 
-# Constants
-bound_char	 = 'x'
+### Constants ##############################
 goal_char	 = 'g'
 start_char	 = 's'
 searches = ["bfs","dfs","astar"]
 
-# Class
+### Class ##############################
 def MyPriorityQueue(PriorityQueue):
 	def get(self):
 		return super().get()[-1]
 
 
-# Functions
-
+### Functions ##############################
 # Print the given field
 # field - field to print
 def printField(field):
@@ -265,7 +263,7 @@ def runSearch(field,algorithm,debug):# Run the search
 	elif algorithm == "bfs": return genericSearch(field,start_list,goal_list,_dataStructure=Queue,		_heuristic=False,_debug=debug)
 
 
-# Main method
+### Main method ##############################
 def main():
 	# Load the field
 	try: field = loadEnvironment(sys.argv[1])
@@ -304,7 +302,7 @@ def main():
 		print("Something went horribly wrong")
 		return 1
 
-
+### Start ##############################
 # Run the main method
 #
 # CLI usage:
