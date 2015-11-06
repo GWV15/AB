@@ -32,28 +32,32 @@ def printField(field):
 	for i in range(len(field)):
 		print(''.join(field[i]))
 
+
 # Search for character in field
 # c		- character to find
 # field	- search space
-def searchFor(c,field):
+def searchFor(field,c):
 	for i in range(len(field)):
 		for j in range(len(field[i])):
 			if field[i][j] == c: return (i,j)
 
+
 # Returns true if pos in field is a boundary
-# pos	- position in field
 # field - search space
-def isBound(pos,field):
+# pos	- position in field
+def isBound(field,pos):
 	return field[pos[0]][pos[1]] == bound
 
+
 # Returns true if pos in field is a Portal
-def isPortal(pos,field):
+def isPortal(field,pos):
 	return field[pos[0]][pos[1]] in [chr(el+ord('0')) for el in range(10)]
 
+
 # Returns the position of the other point of the input portal position
-# pos	- position in field
 # field - search space
-def searchPortalPoint(pos,field):
+# pos	- position in field
+def searchPortalPoint(field,pos):
 	portalnumber = field[pos[0]][pos[1]]
 	for i in range(len(field)):
 		for j in range(len(field[i])):
@@ -61,20 +65,25 @@ def searchPortalPoint(pos,field):
 				if not (i == pos[0] and j == pos[1]): 
 					return (i,j)
 
+
 # Returns a list of positions of all portal nodes
 # field - search space
 def getPortalList(field):
 	portallist = []
 	for i in range(len(field)):
 		for j in range(len(field[i])):
-			if isPortal((i,j),field):
+			if isPortal(field,(i,j)):
 				portallist.append((i,j))
 	return portallist
 
+def getDimensions(field):
+	return (len(field), len(field[0]))
+
+
 # Draws the path in the field
-# path	- the path to draw
 # field - the field to draw on
-def drawPath(path, field):
+# path	- the path to draw
+def drawPath(field,path):
 	tmp = deepcopy(field)
 	if path:
 		start = path[0]
@@ -84,23 +93,25 @@ def drawPath(path, field):
 				tmp[el[0]][el[1]] = '+'
 	return tmp
 
+
 # This function enables the user to step through iterations and see the current path
-# path	- the path to show
 # field - search space
-def debug(path, field):
-	printField(drawPath(path,field))
+# path	- the path to show
+def debug(field,path):
+	printField(drawPath(field,path))
 	print(path)
 	input("step")
+
 
 # Calculate the estimate cost of a given path to the goal position
 # When working with portals an optimistic heuristic assumes that the shortest path the minimum of the normal Manhattan distance
 # and a shortcut with portals, where the maximum shortcut is given by the 
 # Manhattan distance to the nearest portal from the current path + Manhattan distance from the goal to the nearest portal to the goal
 # regargless of any more portals taken on the path
+# field 	- search space
 # path		- the path
 # gool_pos	- the goal position
-# field 	- search space
-def heuristicCost(path,goal_pos,field):
+def heuristicCost(field,path,goal_pos):
 	PortalList = getPortalList(field)
 	if len(PortalList) > 1:
 		nearestPortalHead = PortalList[np.argmin([getManhattanDistance(node,path[-1]) for node in PortalList])]
@@ -108,26 +119,29 @@ def heuristicCost(path,goal_pos,field):
 		return len(path) + min(getManhattanDistance(path[-1],goal_pos),(getManhattanDistance(path[-1],nearestPortalHead)+getManhattanDistance(nearestPortalGoal,goal_pos)))
 	return len(path) + getManhattanDistance(path[-1],goal_pos)
 
+
 # Returns the 4 orthogonal neighbors in 2D Space of a Node
 # If the neighbor is a portal the counterpart portalnode gets added instead
-# node 	- position in the field
 # field - search space
-def getNeighbors(node,field):
+# node 	- position in the field
+def getNeighbors(field,node):
 	w = (node[0] + 1, node[1]  + 0)
 	a = (node[0] + 0, node[1]  - 1)
 	s = (node[0] - 1, node[1]  + 0)
 	d = (node[0] + 0, node[1]  + 1)
 	neighborlist = [w,a,s,d]
 	for n in neighborlist:
-		if isPortal(n,field):
-			neighborlist[neighborlist.index(n)] = searchPortalPoint(n,field)
+		if isPortal(field,n):
+			neighborlist[neighborlist.index(n)] = searchPortalPoint(field,n)
 	return neighborlist
+
 
 # Calculate the Manhattan distance between two points
 # pointA	- first point
 # pointB	- second point
 def getManhattanDistance(pointA, pointB):
 	return abs((pointA[0] - pointB[0])) + abs((pointA[1] - pointB[1]))
+
 
 # Generic Search from a List of Starting Points to a List of Endpoints
 # BFS,DFS or A* depends on the given dataStructure
@@ -149,6 +163,8 @@ def genericSearch(field, startPosList, endPosList, _dataStructure=Queue, _heuris
 			frontier.put((0,[startPos]))
 		else:
 			frontier.put([startPos])
+
+	tstart = timer()
 
 	# Search as long as the frontier has some entries left
 	while not frontier.empty():
@@ -172,13 +188,16 @@ def genericSearch(field, startPosList, endPosList, _dataStructure=Queue, _heuris
 			visited.append(head)
 			
 			# Are we finished?
-			if head in endPosList: return path,len(visited),max_frontier_len
+			if head in endPosList:
+				tend = timer()
+				elapsed_time = tend - tstart
+				return [path, len(visited), max_frontier_len, elapsed_time]
 
 			# Iterate over all neighbors
-			for neighbor in getNeighbors(head,field):
+			for neighbor in getNeighbors(field,head):
 
 				# Can we expand in this direction?
-				if not isBound(neighbor, field):
+				if not isBound(field,neighbor):
 
 					# constuct the new path
 					new_path = [n for n in path]
@@ -189,12 +208,15 @@ def genericSearch(field, startPosList, endPosList, _dataStructure=Queue, _heuris
 
 					# Use heuristics if flag is set
 					if _heuristic:
-						frontier.put((heuristicCost(new_path,endPosList[0],field),new_path))
+						frontier.put((heuristicCost(field,new_path,endPosList[0]),new_path))
 					else:
 						frontier.put(new_path)
 
 	# When the frontier is empty no path was found. Return 0 as path.
-	return 0,len(visited),max_frontier_len
+	tend = timer()
+	elapsed_time = tend - tstart
+	return [0, len(visited), max_frontier_len, elapsed_time]
+
 
 # Print statistics collected each search
 # time			- time elapsed while searching
@@ -205,63 +227,83 @@ def printSearchInfo(time,max_frontier,visit_count):
 	print("Biggest frontier had ", max_frontier, " Elements")
 	print("The search \"visited\" ", visit_count, " Points")
 
+
 # Ask a given question, until the given answer matches the allowed ones
 # cli_arg				- number of cli-argument, which answers the question. Set to 0 to disable
 # first_question		- the first question to ask (only without cli_arg)
 # following_question	- if the cli-arg or input of first_question is not in answers, ask this question
 # answers				- list of possible answers
-def askForAnswer(cli_arg, first_question, following_question, answers=["y","n"]):
+def askForAnswer(cli_arg,first_question,following_question,answers=["y","n"]):
+
 	if cli_arg > 1 and len(sys.argv) > cli_arg: answer = sys.argv[cli_arg]
-	else: answer = input(firstQuestion + " (" + "|".join(answers) + ") ")
+
+	else: answer = input(first_question + " (" + "|".join(answers) + ") ")
+
 	# Ask until valid answer is given
 	while(answer not in answers):
-		answer = input(followingQuestion + " (" + "|".join(answers) + ") ")
-	return answer
+		answer = input(following_question + " (" + "|".join(answers) + ") ")
+
+	if answers == ["y","n"]:
+		if answer == "y": return True
+		else: return False
+	else: return answer
+
+
+def loadEnvironment(file_path):
+	try: field_txt = open(file_path, "r")
+	except IOError:
+		print("Error: File ", file_path," does not appear to exist.")
+		return 1
+	else: return [list(line.rstrip('\n')) for line in field_txt]
+
+
+def runSearch(field,algorithm,debug):# Run the search
+	if algorithm not in searches:
+		print("Given search is not defined")
+		return []
+	if algorithm == "astar": return genericSearch(field,[searchFor(field,start)],[searchFor(field,goal)],_dataStructure=PriorityQueue,	_heuristic=True	,_debug=debug)
+	elif algorithm == "dfs": return genericSearch(field,[searchFor(field,start)],[searchFor(field,goal)],_dataStructure=LifoQueue,		_heuristic=False,_debug=debug)
+	elif algorithm == "bfs": return genericSearch(field,[searchFor(field,start)],[searchFor(field,goal)],_dataStructure=Queue,			_heuristic=False,_debug=debug)
+
 
 # Main method
 def main():
 	# Load the field
-	if len(sys.argv) >= 2: field = [list(line.rstrip('\n')) for line in open(sys.argv[1])]
-	else:
-		print("There has to be at least one command line argument. It should be our enviroment.")
-		return
-	print(sys.argv[1])
+	try: field = loadEnvironment(sys.argv[1])
+	except IndexError:
+		print("There hast to be at least one command line argument (path to environment)")
+		return 1
 
 	# Print the field
-	print("Enviroment")
+	print("Environment")
 	printField(field)
 
 	# Some Info
-	print("Character", start, "found at", searchFor(start,field))
-	print("Character", goal , "found at", searchFor(goal,field), "\n")
+	print("Character", start, "found at", searchFor(field,start),
+		"\nCharacter", goal , "found at", searchFor(field,goal))
 
 	# Ask for debug output
-	if "y" == askForAnswer(3, "Do you want to debug and step through the pathfinding?", "I didn't understand you.", ["y","n"]):
-		debugFlag = True
-	else: debugFlag = False
+	debugFlag	= askForAnswer(3, "Do you want to debug and step through the pathfinding?", "I didn't understand you.")
+	howToSearch	= askForAnswer(2, "Which search should I use?", "I didn't understand you.", searches)
 
-	howToSearch = askForAnswer(2, "Which search should I use?", "I didn't understand you.", searches)
-
-	# Run the search
-	tstart = timer()
-	if  (howToSearch == "dfs"  ): search_result = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=LifoQueue,_heuristic=False,_debug=debugFlag)
-	elif  (howToSearch == "bfs"  ): search_result = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=Queue,_heuristic=False,_debug=debugFlag)
-	elif  (howToSearch == "astar"  ): search_result = genericSearch(field,[searchFor(start,field)],[searchFor(goal,field)],_dataStructure=PriorityQueue,_heuristic=True,_debug=debugFlag)
-	tend = timer()
-	elapsed_time = tend - tstart
-	search_path = search_result[0]
+	# sr = [path, size of visited[], max-size of frontier & elapsed time]
+	sr = runSearch(field,howToSearch,debugFlag)
+	print("\nSearch has finished")
 
 	# Print the path
-	print("\nSearch has finished")
-	if(search_path == 0):
-		print("No Path found")
+	if len(sr) == 4:
+		if(sr[0] == 0): print("No Path found")
+		else:
+			print(howToSearch.upper(), "Path:\n", sr[0], "\n", "Visualized Path:\n")
+			printField(drawPath(field,sr[0])) # Draw the path to the field
+
+		if askForAnswer(4, "Some statistics?", "I didn't understand you."):
+			printSearchInfo(sr[3], sr[2] ,sr[1])
+
+		return 0
 	else:
-		print(howToSearch.upper(), "Path:\n", search_path, "\n")
-		print("Visualized Path:\n")
-		printField(drawPath(search_path,field)) # Draw the path to the field
-		#printSearchInfo()
-	if "y" == askForAnswer(4, "Some statistics?", "I didn't understand you.", ["y","n"]):
-		printSearchInfo(elapsed_time, search_result[2] ,search_result[1])
+		print("Something went horribly wrong")
+		return 1
 
 
 # Run the main method
@@ -275,5 +317,5 @@ def main():
 #4 (y or n)		Display additional info
 #
 if __name__ == "__main__":
-    main()
+	main()
 
