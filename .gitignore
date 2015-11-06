@@ -2,4 +2,7 @@
 *.aux
 *.out
 *.synctex.gz
+__pycache__/
+*.py[cod]
+*$py.class
 
