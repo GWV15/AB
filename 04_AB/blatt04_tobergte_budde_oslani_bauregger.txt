@@ -1,0 +1,57 @@
+blatt3_enviroment:
+
+BFS
+Time:  0.0038848929998493986
+Biggest frontier had  40  Elements
+The search "visited"  99  Points
+
+DFS
+Time:  0.0020543219998216955
+Biggest frontier had  68  Elements
+The search "visited"  56  Points
+
+ASTAR
+Time:  0.14485987899934116
+Biggest frontier had  46  Elements
+The search "visited"  85  Points
+
+
+blatt4_enviroment_a:
+
+BFS:
+Time:  0.00431548900087364
+Biggest frontier had  40  Elements
+The search "visited"  99  Points
+
+DFS:
+Time:  0.004194097000436159
+Biggest frontier had  66  Elements
+The search "visited"  99  Points
+
+ASTAR:
+Time:  0.16948540700104786
+Biggest frontier had  46  Elements
+The search "visited"  99  Points
+
+
+Time:  0.0033548280007380527
+Biggest frontier had  54  Elements
+The search "visited"  82  Points
+
+
+blatt4_enviroment_b:
+
+BFS:
+Time:  0.0020062709991179872
+Biggest frontier had  86  Elements
+The search "visited"  58  Points
+
+DFS:
+Time:  0.06589013399934629
+Biggest frontier had  43  Elements
+The search "visited"  32  Points
+
+ASTAR:
+Time:  0.06589013399934629
+Biggest frontier had  43  Elements
+The search "visited"  32  Points
