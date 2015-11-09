@@ -13,8 +13,9 @@ from queue import LifoQueue, Queue, PriorityQueue
 from timeit import default_timer as timer
 
 ### Constants ##############################
-goal_char	 = 'g'
-start_char	 = 's'
+goal_char	= 'g'
+start_char	= 's'
+bound_char	= 'x'
 searches = ["bfs","dfs","astar"]
 
 ### Class ##############################
