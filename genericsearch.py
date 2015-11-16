@@ -5,6 +5,7 @@
 #
 # Johannes Twiefel | Montags 12 - 14 Uhr | F-009 
 
+
 ### Imports ##############################
 import sys
 import numpy as np ## INSTALL
@@ -12,11 +13,13 @@ from copy import deepcopy
 from queue import LifoQueue, Queue, PriorityQueue
 from timeit import default_timer as timer
 
+
 ### Constants ##############################
 goal_char	= 'g'
 start_char	= 's'
 bound_char	= 'x'
 searches = ["bfs","dfs","astar"]
+
 
 ### Class ##############################
 def MyPriorityQueue(PriorityQueue):
@@ -303,6 +306,7 @@ def main():
 		print("Something went horribly wrong")
 		return 1
 
+
 ### Start ##############################
 # Run the main method
 #
@@ -314,6 +318,7 @@ def main():
 #3 (y or n)		Step throu the search
 #4 (y or n)		Display additional info
 #
+
 if __name__ == "__main__":
 	main()
 
