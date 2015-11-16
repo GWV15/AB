@@ -1,0 +1,69 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = de_DE
+
+\documentclass[DIV=calc,numbers=noenddot]{scrartcl}
+
+\usepackage[ngerman]{babel}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{calc}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\newcounter{blatt}
+\setcounter{blatt}{5} % Nummer des Aufgabenblattes
+\renewcommand{\thesection}{Exercise \arabic{blatt}.\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}.}
+\renewcommand{\thesubsubsection}{(\alph{subsubsection})}
+
+\title{GWV - Grundlagen der Wissensverarbeitung Blatt \arabic{blatt}}
+\author{Julian Tobergte, Melanie Budde,\\Maximilian Bauregger, Mohammad Oslani}
+\date{\today}
+
+\setcounter{section}{1}
+
+\begin{document}
+	\maketitle
+	\section{Search and Parsing}
+		\subsection{}
+			\subsubsection{}
+				Es gibt vier verschiedene Aktionen die der Parser auf seiner Eingabe ($Stack$, $Worte$, $Kanten$) ausführen kann. Der Algorithmus baut mithilfe der folgenden Aktionen einen "dependency tree" (DT). Beim Start ist der $Stack$ sowie die $Kanten$ leer und alle Worte des Satzes sind in $Worte$.
+				\begin{description}
+					\item[Left-Arc] fügt den Kanten eine Neue hinzu. Nämlich die Kante vom nächsten Eingabewort zum Knoten, welcher auf dem Stack aufliegt und danach entfernt wird.
+					\item[Right-Arc] fügt den Kanten eine Neue hinzu. Nämlich die Kante vom Knoten, welcher auf dem Stack aufliegt, zum nächsten Eingabewort. Dieses wird dem Stack hinzugefügt
+					\item[Reduce] beschreibt das Entfernen eines Knotens vom Stack.
+					\item[Shift] beschreibt das Hinzufügen des nächsten Eingabewortes zum Stack.
+				\end{description}
+			\subsubsection{}
+				Der Algorithmus terminiert, sobald es kein Eingabewort in $Worte$ mehr gibt.
+			\subsubsection{}
+				Es gibt 4 formale Eigenschaften, die der DT haben muss.
+				\begin{description}
+					\item[Singe Head] Der Baum darf nur eine Wurzel besitzen
+					\item[Acyclic] Es dürfen keine Zyklen auftreten
+					\item[Connected] Alle Konten des Baumes müssen irgendwie miteinander verbunden sein.
+					\item[Projective] Informell gesagt - Beim Zeichnen des Baumes mit allen Knoten in einer Ebene (sodass die Reihenfolge der Knoten den Satz ergeben) muss es möglich sein alle Kanten ohne Überkreuzen zu zeichnen.
+				\end{description}
+			\subsubsection{}
+				Die Graphen sind diesem Dokument angehängt.
+		\subsection{}
+		\subsection{}
+			\paragraph{Search states}
+				Die search states des Parsen's sind die einzelnen Zustände in denen sich der Parser befindet, effektiv also jedes mögliche Set an [$Stack$,$Worte$,$Kanten$]
+			\paragraph{Start state}
+				Der start state ist somit der Zustand: [$leer$,$Worte$,$\emptyset$]
+			\paragraph{End state}
+				Der End state ist der Zustand: [$Stack$,$leer$,$Kanten$]
+			\paragraph{State transitions}
+				Die state transitions sind die oben beschriebenen möglichen Aktionen des Algorithmus.
+			\paragraph{Vorteile des Parsens}
+				Zum Erzeugen aller möglichen Bäume ist sehr viel Zeit und Platz notwendig und es würden auch eine große Menge an nicht zulässigen Graphen erzeugt. Der Algorithmus hingegen sichert zu, dass nach Beendigung die weiter oben beschriebenen vier Bedingungen erfüllt sind und der Aufwand ist deutlich geringer.
+			
+\begin{figure}[h!]
+	\centering
+	\def\svgwidth{\columnwidth}
+	\input{graphs.pdf_tex}
+\end{figure}
+\end{document}
