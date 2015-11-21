@@ -1,0 +1,32 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = de_DE
+
+\documentclass[DIV=calc,numbers=noenddot]{scrartcl}
+
+\usepackage[ngerman]{babel}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{calc}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\newcounter{blatt}
+\setcounter{blatt}{6} % Nummer des Aufgabenblattes
+\renewcommand{\thesection}{Exercise \arabic{blatt}.\arabic{section}}
+\renewcommand{\thesubsection}{Aufgabenteil \arabic{subsection}}
+\renewcommand{\thesubsubsection}{(\alph{subsubsection})}
+
+\title{GWV - Grundlagen der Wissensverarbeitung Blatt \arabic{blatt}}
+\author{Julian Tobergte, Melanie Budde,\\Maximilian Bauregger, Mohammad Oslani}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	\section{Constraints}
+		\subsection{}
+			Das constraint network ist angehängt.
+		\subsection{}
+			Unser ,,informaler`` Ansatz wäre es, sich zuerst, zB. für Spalte D1,  ein zufälliges Wort auszusuchen und nun die Spalten A1 - A3 mit Worten aus der Liste füllen. Ergeben sich dadurch in D2 und D3 keine erlaubten Wörter, so müssen andere Worte für die Zeilen A1 - A3 gewählt werden. Sind hierfür wiederum keine möglich, so muss ein anderes Wort für D1 gewählt werden. Dies kann man nun so lange durchprobieren, bis eine passende Belegung gefunden ist.
+\end{document}
