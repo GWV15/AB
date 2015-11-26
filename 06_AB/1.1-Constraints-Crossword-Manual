@@ -1,0 +1,12 @@
+- Choose words whose second and third letter is the beginning of another word in the wordlist.
+- Try each of those for line A1
+- Give up because the complexity is too much to handle
+
+	|	D1	|	D2	|	D3
+===========================================================
+A1	|	b	|	e	|	e
+===========================================================
+A2	|	a	|	r	|	e
+===========================================================
+A3	|	t	|	?	|	l
+

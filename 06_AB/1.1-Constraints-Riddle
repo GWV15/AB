@@ -1,0 +1,27 @@
+   S E N D
+   M O R E
+ t u v w x 
+==========
+ M O N E Y
+
+x = 0
+
+D+E+x=Y (mod 10)
+
+round((D+E+x)/10)=w
+
+N+R+w=E (mod 10)
+
+round((N+R+w)/10)=v
+
+E+O+v=N (mod 10)
+
+round((E+O+v)/10)=u
+
+S+M+u=O (mod 10)
+
+round((S+M+u)/10)=t
+
+t=M
+
+
