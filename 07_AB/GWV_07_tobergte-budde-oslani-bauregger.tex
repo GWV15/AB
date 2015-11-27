@@ -1,7 +1,7 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = de_DE
 
-\documentclass[DIV=12,numbers=noenddot]{scrartcl}
+\documentclass[DIV=9,numbers=noenddot]{scrartcl}
 
 \usepackage[ngerman]{babel}
 \usepackage{fontspec}
@@ -25,8 +25,7 @@
 
 \begin{document}
 	\maketitle
-	
-			
+				
 	\section{Diagnosis}	
 	\textbf{Assumable}:\\
 	battery, ignition, efr, starter, engine, fuel\_pump, filter, fuel\_tank\\\\
@@ -86,6 +85,53 @@
 	!filter v !fuel\_tank\\\\
 	Keine weitere Ableitung möglich, daher als Konflikte \{filter\} und \{fuel\_tank\}, sowie Vereinigungen dieser Mengen mit weiteren Assumables.\\
 	Die triviale minimale Diagnose ist \{filter, fuel\_tank\}.
+		
+	\newpage
+	\section{CSI Stellingen}
+	\paragraph{Assumable}
+	\begin{align*}
+		  gardener\_worked\_all\_day&
+		\\butler\_worked\_all\_day&
+	\end{align*}
 	
-	\newpage	
+	\paragraph{Observations}
+	\begin{align*}
+		  \neg gardener\_dirty&
+		\\butler\_dirty&
+	\end{align*}
+	
+	\paragraph{Rules}
+	\begin{align*}
+		  gardener\_dirty &\leftarrow gardener\_worked\_all\_day
+		\\butler\_dirty &\leftarrow butler\_worked\_all\_day
+	\end{align*}
+	
+	
+	\paragraph{Integrity Contraints}
+	\begin{align*}
+		  false &\leftarrow gardener\_dirty \land \neg gardener\_dirty
+		\\false &\leftarrow butler\_dirty \land \neg butler\_dirty
+	\end{align*}
+	
+	\begin{equation}
+		KB = \left\{
+			\begin{aligned}
+				&false \leftarrow gardener\_dirty \land \neg gardener\_dirty
+				\\&false \leftarrow butler\_dirty \land \neg butler\_dirty
+				\\&gardener\_dirty \leftarrow gardener\_worked\_all\_day
+				\\&butler\_dirty \leftarrow butler\_worked\_all\_day
+				\\&\neg gardener\_dirty
+				\\&butler\_dirty
+			\end{aligned}
+		\right\}
+	\end{equation}
+	
+	\paragraph{Minimal conflicts}
+	\[\{gardener\_worked\_all\_day\}\]
+	\paragraph{Minimal diagnosis}
+	\[\{gardener\_worked\_all\_day\}\]
+
+Die Aussage des Gärtners, er habe den ganzen Tag gearbeitet, kann nicht stimmen. Daher ist er der Mörder.
+	
+>>>>>>> 09d6d704e8918a79c90f8fcecc36157fe5e1532a
 \end{document}
