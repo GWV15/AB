@@ -25,7 +25,67 @@
 
 \begin{document}
 	\maketitle
-	\section{}
-		\subsection{}
-			\subsubsection{}
+	
+			
+	\section{Diagnosis}	
+	\textbf{Assumable}:\\
+	battery, ignition, efr, starter, engine, fuel\_pump, filter, fuel\_tank\\\\
+	\textbf{Rules}:\\
+	1\ false\ $\leftarrow$ !noise1\\
+	2\ false\ $\leftarrow$ !noise2\\
+	3\ false\ $\leftarrow$ !noise3\\
+	4\ noise3\ $\leftarrow$ engine\\
+	5\ noise2\ $\leftarrow$ fuel\_pump\\
+	6\ noise1\ $\leftarrow$ starter\\
+	7\ engine \ $\leftarrow$ starter \^\ \ filter \^\ \ fuel\_pump \^\ \  fuel\_tank\\
+	8\ fuel\_pump\ $\leftarrow$ efr\\
+	9\ starter\ $\leftarrow$ ignition\\
+	a\ efr\ $\leftarrow$ ignition \^\ \ battery\\
+	b\ ignition\ $\leftarrow$ battery\\\\
+    \textbf{Integrity Constraints}:\\
+	for el in Assumable, noise1, noise2, noise3:\\
+	false\ $\leftarrow$ el \^\ \  !el\\\\
+	\textbf{Observation1}:\\
+	!noise1, !noise2, !noise3\\\\
+	false$\leftarrow$ !noise1 \^\ \  !noise2 \^\ \ !noise3	| 6, 5, 4\\
+	!starter \^\ \ !fuel\_pump \^\ \  !engine	| 9, 8, 7\\
+	!ignition \^\ \  !efr \^\ \  !(starter \^\ \ filter \^\ \  fuel\_pump \^\ \ fuel\_tank) | deMorgan\\
+	!ignition \^\ \ !efr \^\ \  (!starter v !filter v !fuel\_pump v !fuel\_tank) | redundancy (starter $\leftarrow$ ignition)\\
+	!ignition \^\ \ !efr 	| b, a, b\\
+	!battery\\\\
+	\{battery\} ist ein Konflikt und per Definition auch ein minimaler Konflikt.\\
+	Weitere Konflikte:\\ \{ignition, efr\}, \{starter, fuel\_pump, engine\}, \{starter, fuel\_pump\}.\\
+	Die minimale Diagnose ist \{battery, ignition, starter, fuel\_pump\}.\\\\
+	Observation2:\\
+	noise1, !noise2, !noise3\\\\
+	false $\leftarrow$ !noise2 \^\ \ !noise3	| 5, 4\\
+	!fuel\_pump \^\ \ !engine		| 8\\
+	!efr \^\ \ !engine			| 7\\
+	!efr \^\ \ !starter v !filter v !fuel\_pump v !fuel\_tank |\\ starter muss gelten wg noise1\\
+	!efr \^\ \  !filter v !fuel\_pump v !fuel\_tank	| 8\\
+	!efr \^\ \ !filter v !efr v !fuel\_tank		|\\\\
+	Konflikte:\\  \{efr\}, \{efr, filter\}, \{efr, fuel\_tank\},\\ \{efr, fuel\_pump\}, \{efr,engine\}, \{efr, filter, fuel\_tank\}\\
+	minimale Diagnose: \{efr\}\\\\
+	Observation3:\\
+	!noise1, noise2, !noise3\\\\
+	false $\leftarrow$ !noise1 \^\ \ !noise3	| 6, 4\\
+	!starter \^\ \ !engine		| 9 darf nicht angewendet werden wegen noise2,7\\
+	!starter \^\ \ !starter v !filter v !fuel\_pump v !fuel\_tank	| 5\\
+	!starter \^\ \ !starter v !filter v !fuel\_tank	| 9\\
+	!starter \^\ !filter v !fuel\_tank 	| b\\
+	!starter \^\ \ !filter v !fuel\_tank\\\\
+	Konflikte:\\ \{starter, filter\} , \{starter, fuel\_tank\}, \{starter,  filter, fuel\_tank\}\\\\
+	Minimale Diagnose:\\
+	\{starter\}\\\\
+	Observation4:\\
+	noise1, noise2, !noise3\\\\
+	false $\leftarrow$ !noise3	| 4, 7\\
+	!(starter \^\ \ filter \^\ \ fuel\_pump \^\ \ fuel\_tank) | deMorgan\\
+	!starter v !filter v !fuel\_pump v !fuel\_tank | wg. noise1 muss starter angenommen werden\\
+	!filter v !fuel\_pump v !fuel\_tank | analog für noise2 und fuel\_pump\\
+	!filter v !fuel\_tank\\\\
+	Keine weitere Ableitung möglich, daher als Konflikte \{filter\} und \{fuel\_tank\}, sowie Vereinigungen dieser Mengen mit weiteren Assumables.\\
+	Die triviale minimale Diagnose ist \{filter, fuel\_tank\}.
+	
+	\newpage	
 \end{document}
