@@ -46,7 +46,7 @@ def main():
     # Load the field
     # Load the field
     if len(sys.argv) >= 2:
-        field = [list(line.rstrip('\n')) for line in open(sys.argv[1])]
+        wordlist = [line.rstrip('\n') for line in open(sys.argv[1])]
     else:
         print("There has to be at least one command line argument. \
             It should be a text file containig words.")
