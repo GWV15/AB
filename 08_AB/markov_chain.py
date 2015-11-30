@@ -7,6 +7,7 @@
 
 # Imports
 import sys
+import random
 
 # Constants
 
@@ -26,16 +27,14 @@ def askForAnswer(cli_arg, first_question, following_question, answers=[]):
     return answer
 
 
-def askForStart(cli_arg, first_question, following_question):
-    wordlist = [line.rstrip('\n') for line in open(sys.argv[1])]
-    wordset = set(wordlist)
+def askForStart(cli_arg, first_question, following_question, dic):
     if cli_arg > 1 and len(sys.argv) > cli_arg:
         answer = sys.argv[cli_arg]
     else:
         answer = input(first_question + " (word in wordlist) ")
 
     # Ask until valid answer is given
-    while (answer not in wordset):
+    while (answer not in dic.keys()):
         answer = input(following_question + " (word in wordlist) ")
     return answer
 
@@ -46,11 +45,16 @@ def buildDictSlow():
     dictionary = {word:[wordlist[min(len(wordlist)-1,wordlist.index(word)+1)]] for word in wordset}
     return dictionary
 
+
 def builtDict(text_file):
     dictionary = {}
     previous = ""
     for word in open(text_file):
         word = word.rstrip('\n')
+
+        # Filter some words out
+        if word in []:
+            next
 
         if previous not in dictionary:
             dictionary[previous] = [word]
@@ -70,6 +74,13 @@ def countWords(dictionary, word):
     return wordcount
 
 
+def generateSentence(wstart, length, dic):
+    sentence = [wstart]
+    while len(sentence) < length:
+        sentence.append(random.choice(dic.get(sentence[-1])))
+    return sentence
+
+
 # ## Main method ##############################
 
 
@@ -81,11 +92,20 @@ def main():
         return None
     else:
         dic = builtDict(sys.argv[1])
-        print(sorted(countWords(dic, 'als').items(), key=lambda x: x[1]))
+        #print(sorted(countWords(dic, 'als').items(), key=lambda x: x[1]))
 
     where_to_begin = askForStart(2, "Where do you want to start?",
-        "This word is not in the wordlist. Choose another.")
+        "This word is not in the wordlist. Choose another.", dic)
     print("You are starting at ", where_to_begin)
+
+    number = int(input("How many words should the sentence contain?"))
+    while number > 500 or number < 3:
+        number = int(input("Again. How many words?"))
+
+    sentence_string = ""
+    for word in generateSentence(where_to_begin, number, dic):
+        sentence_string = sentence_string + " " + word
+    print(sentence_string)
 
 # Run the main method
 if __name__ == "__main__":
