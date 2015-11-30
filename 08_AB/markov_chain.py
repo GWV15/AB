@@ -86,21 +86,22 @@ def generateSentence(wstart, length, dic):
 
 def main():
     # Load the field
-    if len(sys.argv) < 2:
-        print("There has to be at least one command line argument. \
-            It should be a text file containig words.")
+    if len(sys.argv) != 4:
+        print("Usage: text-file Start Length \n")
         return None
     else:
         dic = builtDict(sys.argv[1])
+        where_to_begin = str(sys.argv[2])
+        number = int(sys.argv[3])
         #print(sorted(countWords(dic, 'als').items(), key=lambda x: x[1]))
 
-    where_to_begin = askForStart(2, "Where do you want to start?",
-        "This word is not in the wordlist. Choose another.", dic)
-    print("You are starting at ", where_to_begin)
+    #where_to_begin = askForStart(2, "Where do you want to start?",
+    #    "This word is not in the wordlist. Choose another.", dic)
+    #print("You are starting at ", where_to_begin)
 
-    number = int(input("How many words should the sentence contain?"))
-    while number > 500 or number < 3:
-        number = int(input("Again. How many words?"))
+    #number = int(input("How many words should the sentence contain?"))
+    #while number > 500 or number < 3:
+    #    number = int(input("Again. How many words?"))
 
     sentence_string = ""
     for word in generateSentence(where_to_begin, number, dic):
