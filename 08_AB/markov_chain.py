@@ -87,8 +87,14 @@ def generateSentence(wstart, length, dic):
 def main():
     # Load the field
     if len(sys.argv) != 4:
-        print("Usage: text-file Start Length \n")
-        return None
+        if len(sys.argv) == 3:
+            dic = builtDict(sys.argv[1])
+            where_to_begin = random.choice(list(dic.keys()))
+            number = int(sys.argv[2])
+
+        else:
+            print("Usage: text-file Start-word(optional) Length \n")
+            return None
     else:
         dic = builtDict(sys.argv[1])
         where_to_begin = str(sys.argv[2])
@@ -99,7 +105,7 @@ def main():
     #where_to_begin = askForStart(2, "Where do you want to start?",
     #                             "This word is not in the wordlist.\
     #                             Choose another.", dic)
-    print("You are starting at ", where_to_begin)
+    #print("You are starting at ", where_to_begin)
 
     #number = int(input("How many words should the sentence contain?"))
     #while number > 500 or number < 3:
