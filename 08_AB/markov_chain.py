@@ -73,6 +73,7 @@ def main():
             It should be a text file containig words.")
         return None
     else:
+        wordlist = [line.rstrip('\n') for line in open(sys.argv[1])]
         dic = builtDict(sys.argv[1])
         print(sorted(countWords(dic, 'als').items(), key=lambda x: x[1]))
 
