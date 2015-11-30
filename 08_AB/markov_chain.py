@@ -93,11 +93,13 @@ def main():
         dic = builtDict(sys.argv[1])
         where_to_begin = str(sys.argv[2])
         number = int(sys.argv[3])
-        #print(sorted(countWords(dic, 'als').items(), key=lambda x: x[1]))
+
+        # print(sorted(countWords(dic, 'als').items(), key=lambda x: x[1]))
 
     #where_to_begin = askForStart(2, "Where do you want to start?",
-    #    "This word is not in the wordlist. Choose another.", dic)
-    #print("You are starting at ", where_to_begin)
+    #                             "This word is not in the wordlist.\
+    #                             Choose another.", dic)
+    print("You are starting at ", where_to_begin)
 
     #number = int(input("How many words should the sentence contain?"))
     #while number > 500 or number < 3:
