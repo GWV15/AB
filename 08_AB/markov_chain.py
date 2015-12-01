@@ -100,8 +100,10 @@ def buildSentenceString(sentence_list, no_space_list):
             word = " " + word
         sentence_string = sentence_string + word
 
-    if sentence_string[-1] != '.':
-        sentence_string = sentence_string + '.'
+    if sentence_string[-1] in no_space_list:
+        sentence_string = sentence_string[:-1]
+
+    sentence_string = sentence_string + '.'
 
     return sentence_string
 
@@ -115,7 +117,7 @@ def evalCmdArg(cmd_list):
     if len(sys.argv) < 2:
         print("The first argument has to be the text file.")
         sys.exit(2)
-    else: 
+    else:
         try:
             input_file = open(sys.argv[1])
         except IOError:
