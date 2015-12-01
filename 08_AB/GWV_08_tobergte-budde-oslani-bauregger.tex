@@ -1,0 +1,35 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = de_DE
+
+\documentclass[DIV=9,numbers=noenddot]{scrartcl}
+
+\usepackage[ngerman]{babel}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{calc}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\newcounter{blatt}
+\setcounter{blatt}{8} % Nummer des Aufgabenblattes
+\renewcommand{\thesection}{Exercise \arabic{blatt}.\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}.}
+\renewcommand{\thesubsubsection}{(\alph{subsubsection})}
+
+\title{GWV - Grundlagen der Wissensverarbeitung}
+\subtitle{Tutorial \arabic{blatt}}
+\author{Julian Tobergte, Melanie Budde,\\Maximilian Bauregger, Mohammad Oslani}
+\date{\today}
+\setcounter{section}{1}
+
+\begin{document}
+	\maketitle
+	\section{Language Modelling}
+		\setcounter{subsection}{1}
+		\subsection{}
+			Nehmen wir z.B. den folgenden generierten Satz: "`Linux gründende neue Herausforderung nicht mehr als Original-Sun-Speicherriegel. in diesen Ankündigungen gibt es auch mit der darauf, der."' Grammatikalisch ist hier einiges im Argen. Es existieren sinnvolle Wortkombinationen, wie "`nicht mehr als"' oder "`in diesen Ankündigungen"'. Eine Satzstruktur oder gar Sinn ist nicht vorhanden. Dies ergibt sich, da nur direkt benachbarte Worte miteinander verknüpft sind, Grammatik sich aber über den gesamten Satz erstreckt.
+	\section{Diagnosis (cont.)}
+	\section{Bayesian Probabilities}
+\end{document}
