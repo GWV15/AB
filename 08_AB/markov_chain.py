@@ -18,6 +18,9 @@ def askForStart(dic, answer=""):
     if answer == "":
         answer = input(first_question)
 
+    if answer == "random":
+        answer = random.choice(list(dic.keys()))
+
     while (answer not in dic.keys()) or answer is "":
         answer = input('"' + answer + '"' + following_question)
 
