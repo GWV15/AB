@@ -23,7 +23,7 @@
 \renewcommand{\thesubsubsection}{(\alph{subsubsection})}
 
 \title{GWV - Grundlagen der Wissensverarbeitung}
-\subtitle{Tutorial \arabic{blatt}}
+\subtitle{Blatt \arabic{blatt}}
 \author{Julian Tobergte, Melanie Budde,\\Maximilian Bauregger, Mohammad Oslani}
 \date{\today}
 \setcounter{section}{1}
@@ -31,10 +31,70 @@
 \begin{document}
 	\maketitle
 	\section{Language Modelling}
-		\setcounter{subsection}{1}
+		\subsection{}\
+			Programm im Anhang.
 		\subsection{}
 			Nehmen wir z.B. den folgenden generierten Satz: "`Linux gründende neue Herausforderung nicht mehr als Original-Sun-Speicherriegel. in diesen Ankündigungen gibt es auch mit der darauf, der."' Grammatikalisch ist hier einiges im Argen. Es existieren sinnvolle Wortkombinationen, wie "`nicht mehr als"' oder "`in diesen Ankündigungen"'. Eine Satzstruktur oder gar Sinn ist nicht vorhanden. Dies ergibt sich, da nur direkt benachbarte Worte miteinander verknüpft sind, Grammatik sich aber über den gesamten Satz erstreckt.
 	\section{Diagnosis (cont.)}
+		\paragraph{Bayessches Netz} \hfill\\
+			Es sind nur 2 Tabellen eingezeichnet, da sich der Rest genau gleich verh"alt. \\
+			\begin{figure}[H]
+				\centering
+				\begin{tikzpicture}
+					[->,>=stealth',shorten >=1pt,auto,node distance=4cm,thick,vars/.style={rectangle,draw,font=\sffamily\Large\bfseries}]
+					\node[vars] (nB) {bat};
+					\node[vars] (nI) [below left of=nB] {Ign};
+					\node[vars] (nE) [below right of=nB] {efr};
+					\node[vars] (nS) [below left of=nI] {sta};
+					\node[vars] (nN) [right of=nS] {eng};
+					\node[vars] (nF) [below of=nN] {fil};
+					\node[vars] (nFP) [below of=nF] {fuP};
+					\node[vars] (nFT) [below of=nFP] {fuT};
+
+					\node       (tB) [above=0.1cm of nB,fill=white!25]{$P(bat) = 0.9$};;
+
+					\node       (tI) [left=0.1cm of nI,fill=white!25]{
+						\begin{tabular}{ c | c | c }
+							$P(Ign|bat)$  & $Ign$    & $\bar{Ign}$ \\
+							\hline
+							$bat$       & $0.9$  & $0.1$ \\
+							$\bar{bat}$ & $0$ & $1$ \\
+						\end{tabular}
+					};;
+
+					\node       (tE) [right=0.1cm of nE,fill=white!25]{
+						\begin{tabular}{ c | c | c }
+							$P(Efr|bat,Ign)$         & $Efr$   & $\bar{Efr}$ \\
+							\hline
+							$bat,Ign$              & $0.9$ & $0.1$ \\
+							$bat,\bar{Ign}$        & $0$ & $1$ \\
+							$\bar{bat},Ign$        & $0$ & $1$ \\
+							$\bar{bat},\bar{Ign}$  & $0$   & $1$ \\
+						\end{tabular}
+					};;
+					\path[every node/.style={font=\sffamily\small}]
+						(nB) edge node {} (nI)
+						     edge node {} (nE)
+						(nI) edge node {} (nS)
+						(nS) edge node {} (nN)
+						(nF) edge node {} (nN)
+						(nFP) edge node {} (nF)
+						(nFT) edge node {} (nFP)
+						(nE) edge node {} (nFP)
+						(nI) edge node {} (nE);
+				\end{tikzpicture}
+			\end{figure}
+		Zur Berechnung ben"otigt man den Satz der totalen Wahrscheinlichkeit.\\
+		Hierbei sind viele Summanden 0, daher ausgelassen.
+		\begin{align*}
+			P(bat) &= 0.9 \\
+			P(sta) &= 0.9 \cdot P(Ign) = 0.9 \cdot 0.9 \cdot 0.9 \\
+			&= 0.729 \\
+			P(eng) &= 0.9 \cdot P(sta) \cdot P(fil) = 0.9 \cdot 0.729 \cdot 0.9 \cdot 0.9 \cdot 0.9 \cdot 0.9 \cdot 0.9 \\
+			&\approx 0.387 \\
+			P(eng|fuP) &= 0.9 \cdot P(sta) \cdot 0.9 \cdot 1 \cdot 0.9 \cdot 0.9 \cdot 0.9 \\
+			&\approx 0.430
+		\end{align*}
 	\section{Bayesian Probabilities}
 		\paragraph{Variablen}
 			\begin{align*}
@@ -99,6 +159,10 @@
 			\[P(B|A) = \frac{P(A|B) \cdot P(B)}{P(A)}\]
 		\paragraph{Aufgaben}
 			\begin{itemize}
+				\item Explaining Away
+				\par
+				In dem Falle, dass eine Person ein Schmuggler ist, bellt der Hund sehr wahrscheinlich.
+				Die Erkl"arung daf"ur, dass der Hund bellt, ist also wahrscheinlich, dass die Person ein Schmuggler ist.
 				\item The probability that a person is a smuggler given the observation that the drug dog is barking:
 				\par
 				Gesucht wird der Wert für $P(s|b)$.
@@ -115,10 +179,29 @@
 				\end{align*}
 				\item The probability that a suspect is sweating (without any prior observation):
 				\par
-				Gesucht wird der Wert für $P(d)$.
+				Gesucht wird der Wert für $P(d)$. \\
+				Mit Hilfe des Satzes der Totalen Wahrscheinlichkeit ist dieser Wert wie folgt zu berechnen.
+				\begin{align*}
+					P(d) &= P(d|s,f) \cdot P(s) \cdot P(f) + P(d|s,\bar{f}) \cdot P(s) \cdot P(\bar{f}) \\
+					& + P(d|\bar{s},\bar{f}) \cdot P(\bar{s}) \cdot P(\bar{f}) + P(d|\bar{s},f) \cdot P(\bar{s}) \cdot P(f) \\
+					P(d) &= 0.8 \cdot 0.01 \cdot 0.013 + 0.4 \cdot 0.01 \cdot 0.987 + 0 + 0.6 \cdot 0.99 \cdot 0.013 \\
+					&\approx 0.011774
+				\end{align*}
 				\item The probability that a person is a smuggler given both the observations that
 				that person is sweating and that the drug dog barked at him or her:
 				\par
-				Gesucht wird der Wert für $P(s|b,d)$.
+				Gesucht wird der Wert für $P(s|b,d)$. \\
+				Daf"ur m"ussen mehrere Zwischenergebnisse benutzt werden.
+				\begin{align*}
+					P(s|b,d) &= \frac{P(b,d|s) \cdot P(s)}{P(b,d)} \\
+					P(b,d|s) &= P(b|s) \cdot P(d|s) \\
+					P(d|s) &= P(d|s,\bar{f}) \cdot P(d|s,f) \\ 
+					&= 0.4 \cdot 0.8 = 0.32 \\
+					P(b,d|s) &= 0.8 \cdot 0.32 \\
+					P(b) &= P(b|s) \cdot P(s) + P(b|\bar{s}) \cdot P(\bar{s}) \\
+					&= 0.0575 \\
+					P(s|b,d) &= \frac{0.8 \cdot 0.32 \cdot 0.01}{0.011774 \cdot 0.0575} \\
+					&= 378 
+				\end{align*}
 			\end{itemize}
 \end{document}
