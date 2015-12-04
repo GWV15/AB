@@ -7,10 +7,10 @@
 
 # Imports
 import sys
-import getopt
 import random
 
 
+# Ask for first word
 def askForStart(dic, answer=""):
     first_question = "Where do you want to start? (word in txt) "
     following_question = " is not in the wordlist. Choose another. "
@@ -24,6 +24,7 @@ def askForStart(dic, answer=""):
     return answer
 
 
+# Ask for number of words
 def askForNumber(min, max, init_val=0):
     try:
         word_number = int(init_val)
@@ -40,6 +41,7 @@ def askForNumber(min, max, init_val=0):
     return word_number
 
 
+# Not used!
 def buildDictSlow(text_file):
     wordlist = [line.rstrip('\n') for line in open(text_file)]
     wordset = set(wordlist)
@@ -50,6 +52,10 @@ def buildDictSlow(text_file):
     return dictionary
 
 
+# Build a dictionary
+#
+# every word in text_file is a key.
+# For each key, value is a list with possible following words
 def builtDict(text_file):
     dictionary = {}
 
@@ -71,6 +77,9 @@ def builtDict(text_file):
     return dictionary
 
 
+# Just for fun
+# Build a dict for a given word containing each following word as key
+# and the number of apperances as value.
 def countWords(dictionary, word):
     wordcount = {}
 
@@ -83,6 +92,8 @@ def countWords(dictionary, word):
     return wordcount
 
 
+# This is were the magic happens
+# generate a sentence (list).
 def generateSentence(wstart, length, dic):
     sentence = [wstart]
 
@@ -91,7 +102,8 @@ def generateSentence(wstart, length, dic):
 
     return sentence
 
-
+# Turn the sentence list into a string
+# (and make some cosmetic changes)
 def buildSentenceString(sentence_list, no_space_list):
     sentence_string = sentence_list[0]
 
@@ -108,6 +120,7 @@ def buildSentenceString(sentence_list, no_space_list):
     return sentence_string
 
 
+# Evaluate the arguments given to the program
 def evalCmdArg(cmd_list):
     input_file = ""
     word_number = ""
@@ -145,6 +158,11 @@ def evalCmdArg(cmd_list):
     return input_file, start_word, word_number
 
 
+# Run the program
+#
+# Usage:
+#  $> markov_chain.py path/to/textfile [NumOfWords] [FirstWord]
+#
 def main():
     input_file, start_word, word_number = evalCmdArg(sys.argv)
 
@@ -155,6 +173,7 @@ def main():
     sentence_list = generateSentence(start_word, word_number, dic)
     sentence_string = buildSentenceString(sentence_list, ['.', ',', ';', ':'])
     print(sentence_string)
+
 
 # Run the main method
 if __name__ == "__main__":
