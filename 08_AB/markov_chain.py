@@ -10,18 +10,28 @@ import sys
 import random
 
 
+def getWordList(dic):
+    words = []
+    for key in dic.keys():
+        for word in key.split("#")[1:]:
+            words.append(word)
+    return words
+
+
 # Ask for first word
 def askForStart(dic, answer=""):
     first_question = "Where do you want to start? (word in txt) "
     following_question = " is not in the wordlist. Choose another. "
 
+    words = getWordList(dic)
+
     if answer == "":
         answer = input(first_question)
 
     if answer == "random":
-        answer = random.choice(list(dic.keys()))
+        answer = random.choice(words)
 
-    while (answer not in dic.keys()) or answer is "":
+    while (answer not in words) or answer is "":
         answer = input('"' + answer + '"' + following_question)
 
     return answer
@@ -44,25 +54,14 @@ def askForNumber(min, max, init_val=0):
     return word_number
 
 
-# Not used!
-def buildDictSlow(text_file):
-    wordlist = [line.rstrip('\n') for line in open(text_file)]
-    wordset = set(wordlist)
-
-    dictionary = {word: [wordlist[min(len(wordlist) - 1,
-                  wordlist.index(word)+1)]] for word in wordset}
-
-    return dictionary
-
-
 # Build a dictionary
 #
-# every word in text_file is a key.
+# every word (combination of length ngramlvl) in text_file is a key.
 # For each key, value is a list with possible following words
-def builtDict(text_file):
+def builtDict(text_file, ngramlvl):
     dictionary = {}
 
-    previous = ""
+    lastlist = []
     for word in text_file:
         word = word.rstrip('\n')
 
@@ -70,46 +69,57 @@ def builtDict(text_file):
         if word in []:
             next
 
-        if previous not in dictionary:
-            dictionary[previous] = [word]
+        key = genKey(lastlist)
+        if key not in dictionary:
+            dictionary[key] = [word]
         else:
-            dictionary[previous].append(word)
+            dictionary[key].append(word)
 
-        previous = word
+        if len(lastlist) >= ngramlvl - 1:
+            lastlist.pop(0)
+
+        lastlist.append(word)
 
     return dictionary
 
 
-# Just for fun
-# Build a dict for a given word containing each following word as key
-# and the number of apperances as value.
-def countWords(dictionary, word):
-    wordcount = {}
-
-    for nextword in dictionary.get(word):
-        if nextword not in wordcount:
-            wordcount[nextword] = 1
-        else:
-            wordcount[nextword] += 1
-
-    return wordcount
+def genKey(wordlist):
+    key = ""
+    for item in wordlist:
+        key = key + "#" + item
+    return key
 
 
 # This is were the magic happens
 # generate a sentence (list).
-def generateSentence(wstart, length, dic):
-    sentence = [wstart]
+def generateSentence(wstart, ngramlvl, length, dic):
+    if 2 < ngramlvl:
+        possible_keys = []
+        for x in dic.keys():
+            if x is '':
+                continue
+            words = x.split("#")[1:]
+            if words[0] == wstart:
+                possible_keys.append(words)
 
-    while len(sentence) < length:
-        sentence.append(random.choice(dic.get(sentence[-1])))
+        sentence = random.choice(possible_keys)
+    else:
+        sentence = [wstart]
+
+    while len(sentence) < length or sentence is []:
+        key = genKey(sentence[-(ngramlvl-1):])
+        if key not in dic:
+            sentence = sentence[:-1]
+            continue
+        sentence.append(random.choice(dic.get(key)))
 
     return sentence
+
 
 # Turn the sentence list into a string
 # (and make some cosmetic changes)
 def buildSentenceString(sentence_list, no_space_list):
     sentence_string = sentence_list[0]
-
     for word in sentence_list[1:]:
         if word not in no_space_list:
             word = " " + word
@@ -126,12 +136,13 @@ def buildSentenceString(sentence_list, no_space_list):
 # Evaluate the arguments given to the program
 def evalCmdArg(cmd_list):
     input_file = ""
+    ngramlvl = ""
     word_number = ""
     start_word = ""
 
     # text file needed
-    if len(sys.argv) < 2:
-        print("The first argument has to be the text file.")
+    if len(sys.argv) < 3:
+        print("The first argument has to be the text file. The second one the n-gram level.")
         sys.exit(2)
     else:
         try:
@@ -140,40 +151,46 @@ def evalCmdArg(cmd_list):
             print("The text file could not be read")
             sys.exit(2)
 
+        try:
+            ngramlvl = int(sys.argv[2])
+        except ValueError:
+            print("The n n-gram lvl could not be read")
+            sys.exit(2)
+
         # one of two optional arguments given
-        if len(sys.argv) == 3:
+        if len(sys.argv) == 4:
             try:
-                word_number = int(sys.argv[2])
+                word_number = int(sys.argv[3])
             except ValueError:
                 # the second argument is not the word number
-                start_word = str(sys.argv[2])
+                start_word = str(sys.argv[3])
 
         # two of two optional arguments given
-        elif len(sys.argv) >= 4:
+        elif len(sys.argv) >= 5:
             try:
-                word_number = int(sys.argv[2])
-                start_word = str(sys.argv[3])
+                word_number = int(sys.argv[3])
+                start_word = str(sys.argv[4])
             except ValueError:
                 # the second argument is not the word number
-                start_word = str(sys.argv[2])
-                word_number = int(sys.argv[3])
+                start_word = str(sys.argv[3])
+                word_number = int(sys.argv[4])
 
-    return input_file, start_word, word_number
+    return input_file, ngramlvl, start_word, word_number
 
 
 # Run the program
 #
 # Usage:
-#  $> markov_chain.py path/to/textfile [NumOfWords] [FirstWord]
+#  $> markov_chain.py path/to/textfile ngramlvl [NumOfWords] [FirstWord]
 #
 def main():
-    input_file, start_word, word_number = evalCmdArg(sys.argv)
+    input_file, ngramlvl, start_word, word_number = evalCmdArg(sys.argv)
 
-    dic = builtDict(input_file)
+    dic = builtDict(input_file, ngramlvl)
     start_word = askForStart(dic, start_word)
     word_number = askForNumber(3, 500, word_number)
 
-    sentence_list = generateSentence(start_word, word_number, dic)
+    sentence_list = generateSentence(start_word, ngramlvl, word_number, dic)
     sentence_string = buildSentenceString(sentence_list, ['.', ',', ';', ':'])
     print(sentence_string)
 
