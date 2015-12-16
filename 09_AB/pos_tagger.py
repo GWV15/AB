@@ -17,43 +17,6 @@ def getWordList(dic):
             words.append(word)
     return words
 
-
-# Ask for first word
-def askForStart(dic, answer=""):
-    first_question = "Where do you want to start? (word in txt) "
-    following_question = " is not in the wordlist. Choose another. "
-
-    words = getWordList(dic)
-
-    if answer == "":
-        answer = input(first_question)
-
-    if answer == "random":
-        answer = random.choice(words)
-
-    while (answer not in words) or answer is "":
-        answer = input('"' + answer + '"' + following_question)
-
-    return answer
-
-
-# Ask for number of words
-def askForNumber(min, max, init_val=0):
-    try:
-        word_number = int(init_val)
-    except ValueError:
-        word_number = 0
-
-    question = "How many words? "
-    while word_number > max or word_number < min:
-        try:
-            word_number = int(input(question))
-        except ValueError:
-            continue
-
-    return word_number
-
-
 # Build a dictionary
 #
 # every word (combination of length ngramlvl) in text_file is a key.
@@ -86,15 +49,15 @@ def builtDict(text_file, ngramlvl):
 #
 # every word (combination of length ngramlvl) in text_file is a key.
 # For each key, value is a list with possible following words
-def buildTagDict(text_file):
+def buildTagDict(data_file):
     ngramlvl = 2
     dictionary = {}
 
     lastlist = []
-    for line in text_file:
+    for line in data_file:
         tag = line.strip().split('\t')[-1]
         if (len(tag) != 0): # if empty line in data
-            print(tag)
+            #print(tag)
             # Filter some words out
             if tag in []:
                 next
@@ -109,7 +72,6 @@ def buildTagDict(text_file):
                 lastlist.pop(0)
 
             lastlist.append(tag)
-
     return dictionary
 
 def genKey(wordlist):
@@ -118,10 +80,17 @@ def genKey(wordlist):
         key = key + "#" + item
     return key
 
+def getStartTag(dic,text):
+    startTag = "NN"
+    return startTag
 
 # This is were the magic happens
 # generate a sentence (list).
-def generateSentence(wstart, ngramlvl, length, dic):
+def tagText(dic, textlist):
+    ngramlvl = 2
+    length = len(textlist)
+    wstart = getStartTag(dic,textlist)
+    taglist = []
     if 2 < ngramlvl:
         possible_keys = []
         for x in dic.keys():
@@ -131,19 +100,24 @@ def generateSentence(wstart, ngramlvl, length, dic):
             if words[0] == wstart:
                 possible_keys.append(words)
 
-        sentence = random.choice(possible_keys)
+        taglist = taglist.append(random.choice(possible_keys))
     else:
-        sentence = [wstart]
-
-    while len(sentence) < length or sentence is []:
-        key = genKey(sentence[-(ngramlvl-1):])
+        taglist = [wstart]
+    while len(taglist) < length or taglist is []:
+        key = genKey(taglist[-(ngramlvl-1):])
         if key not in dic:
-            sentence = sentence[:-1]
+            taglist = taglist[:-1]
             continue
-        sentence.append(random.choice(dic.get(key)))
+        taglist.append(random.choice(dic.get(key)))
 
-    return sentence
+    return taglist
 
+def buildTextList(text_file):
+    list = []
+    for line in text_file:
+        word = line.split()
+        list.append(word)
+    return list[0]
 
 # Turn the sentence list into a string
 # (and make some cosmetic changes)
@@ -195,8 +169,12 @@ def evalCmdArg(cmd_list):
 def main():
     data_file, text_file = evalCmdArg(sys.argv)
 
+
+    text = buildTextList(text_file)
     dic = buildTagDict(data_file)
     taggedText = "not yet"
+    taggedText = tagText(dic,text)
+    print(text)
     print(taggedText)
 
 
