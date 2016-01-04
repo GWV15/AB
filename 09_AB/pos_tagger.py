@@ -51,16 +51,45 @@ def tagText(text, dict_words, dict_tags):
         if word not in dict_words:
             print(word + " not in dictionary. Previous tag: " + tags[-1])
             
-            newtag = dict_tags[tags[-1]][0]
+            #newtag = dict_tags[tags[-1]][0]
+            newtag = max(zip((dict_tags[tags[-1]].count(item) for item in set(dict_tags[tags[-1]])), set(dict_tags[tags[-1]])))[-1]
             print("Inserting " + newtag + " instead")
             
             tags.append(newtag)
 
         else:
-            tags.append(dict_words[word][0])
+            tags.append(findMostProbable(dict_tags, dict_words, word, tags[-1]))
 
     return tags[1:]
 
+
+def findMostProbable(dict_tags, dict_words, word, prev_tag):
+    wordtags = dict_words[word]
+    tagtags = dict_tags[prev_tag]
+    freq_word_tag = zip((wordtags.count(item) for item in set(wordtags)), set(wordtags))
+    most_word_tag = max(freq_word_tag)
+    freq_tag_tag = zip((wordtags.count(item) for item in set(wordtags)), set(wordtags))
+    most_tag_tag = max(freq_tag_tag)
+    probability_word = most_word_tag[0]/len(wordtags)
+    probability_tag = most_tag_tag[0]/len(tagtags)
+    
+    combinedProbability = [((wordtags.count(tag)/len(wordtags)) * (tagtags.count(tag)/len(tagtags)), tag) for tag in list(set(wordtags) & set(tagtags))]
+
+    print("------\n" + "Looking at word " + word)
+    print("Previous Tag: '" + prev_tag + "' has most probable successor with frequency: ")
+    print(most_tag_tag)
+    print("out of " + str(len(tagtags)) + " possible tag(s)")
+    print("Probability based on tag: " + str(probability_tag) + "\n" + "---")
+
+    print("Word '" + word + "' has most probable tag with frequency: ")
+    print(most_word_tag)
+    print("out of " + str(len(wordtags)) + " possible tag(s)")
+    print("Probability based on word: " + str(probability_word) + "\n" + "-------")
+    print("Combined probabilities: ")
+    print(combinedProbability)
+    print("\n\n")
+
+    return most_word_tag[-1]
 
 # Evaluate the arguments given to the program
 def evalCmdArg(cmd_list):
