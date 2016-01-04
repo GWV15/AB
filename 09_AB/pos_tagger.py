@@ -66,7 +66,7 @@ def findMostProbable(dict_tags, dict_words, word, prev_tag):
     tagtags = dict_tags[prev_tag]
     freq_word_tag = zip((wordtags.count(item) for item in set(wordtags)), set(wordtags))
     most_word_tag = max(freq_word_tag)
-    freq_tag_tag = zip((wordtags.count(item) for item in set(wordtags)), set(wordtags))
+    freq_tag_tag = zip((tagtags.count(item) for item in set(wordtags)), set(wordtags))
     most_tag_tag = max(freq_tag_tag)
     probability_word = most_word_tag[0]/len(wordtags)
     probability_tag = most_tag_tag[0]/len(tagtags)
@@ -83,11 +83,9 @@ def findMostProbable(dict_tags, dict_words, word, prev_tag):
     print(most_word_tag)
     print("out of " + str(len(wordtags)) + " possible tag(s)")
     print("Probability based on word: " + str(probability_word) + "\n" + "-------")
-    print("Combined probabilities: ")
-    print(combinedProbability)
-    print("\n\n")
+    print("Combined probabilities: " + str(combinedProbability) + "\n")
 
-    return most_word_tag[-1]
+    return max(combinedProbability)[-1]
 
 # Evaluate the arguments given to the program
 def evalCmdArg(cmd_list):
