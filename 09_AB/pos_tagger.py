@@ -10,9 +10,6 @@ import sys
 
 
 # Build a dictionary
-#
-# every word (combination of length ngramlvl) in text_file is a key.
-# For each key, value is a list with possible following words
 def buildDicts(data_file):
     dict_tags = {}
     dict_words = {}
@@ -47,6 +44,7 @@ def buildDicts(data_file):
 def tagText(text, dict_words, dict_tags):
     tags = ['$.']
 
+    print(text)
     for word in text:
         if word not in dict_words:
             print(word + " not in dictionary. Previous tag: " + tags[-1])
@@ -120,19 +118,15 @@ def evalCmdArg(cmd_list):
 
 def splitText(text):
     words = []
-    word = ""
 
-    for char in text.strip():
-        if char == ' ':
-            words.append(word)
-            word = ""
-            next
-        elif char in ['.', ',', ';', ':', '!', '?']:
-            words.append(word)
-            word = char
+    for word in text.split():
+        if word[-1] in ['.', ',', ';', ':', '!', '?']:
+            words.append(word[:-1])
+            words.append(word[-1])
         else:
-            word = word + char
-
+            words.append(word)
+    if '' in words:
+        words.remove('')
     return words
 
 
